@@ -1,47 +1,58 @@
-<nav class="fixed top-0 left-0 w-full z-50 px-10 py-4 flex justify-between items-center bg-transparent text-white">
+<nav class="fixed top-3 inset-x-10 z-[999] bg-transparent">
+    <div class="flex items-center justify-between px-6 py-4">
 
-    <!-- LOGO -->
-    <div class="flex items-center gap-3 px-5 py-4">
-        <a href="home.php" class="text-xl">&#8592;</a>
-        <h2 class="text-lg font-semibold text-[#4A5D49]">
-            <?php echo isset($_GET['kategori']) ? $_GET['kategori'] : 'Home'; ?>
-        </h2>
-    </div>
-
-    <!-- SEARCH BAR DI TENGAH -->
-    <form action="katalog.php" method="GET" class="flex-1 flex justify-center px-10">
-        <div class="w-[60%] flex items-center bg-white text-[#4A5D49] px-4 py-1 rounded-full shadow">
-            <input type="text" name="search" placeholder="Cari barang..."
-                   class="flex-1 outline-none px-2 text-sm bg-transparent">
-            <button type="submit" class="text-lg">&#128269;</button>
+        <!-- BACK -->
+        <div class="flex items-center gap-1">
+            <a href="home.php" class="flex items-center gap-0 hover:opacity-80 transition">
+                <img src="../assets/icons/back.svg" class="w-10 h-10">
+                <span class="text-[30px] font-medium text-[#3e5648]">
+                    <?= isset($_GET['kategori']) ? htmlspecialchars($_GET['kategori']) : 'Katalog'; ?>
+                </span>
+            </a>
         </div>
-    </form>
 
-    <!-- KATEGORI BUTTON (GARIS TIGA) -->
+        <!-- CENTER -->
+        <div class="flex-1 flex justify-center">
+            <div class="w-[55%] flex items-center bg-white px-6 py-3 rounded-full
+                        shadow-md border border-[#3e5648]/30">
+                <input
+                    type="text"
+                    placeholder="cari barang"
+                    class="flex-1 bg-transparent outline-none text-sm"
+                >
+                <img src="../assets/icons/cari.svg" class="w-6 h-6">
+            </div>
+        </div>
+
+    <!-- KATEGORI -->
     <div class="relative">
         <button id="kategoriToggle"
-                class="bg-white text-[#4A5D49] px-4 py-1 rounded-full text-sm shadow flex items-center gap-2">
-            <span class="text-xl">&#9776;</span> <!-- ikon garis tiga -->
-            <span>Kategori</span>
+            class="flex items-center gap-2 px-6 py-2 rounded-full text-white bg-[#7fb7a4] hover:opacity-90 hover:text-[#fafaf7] transition">
+            <img src="../assets/icons/kategori.svg" class="w-6 h-6">
+            Kategori
         </button>
 
         <!-- DROPDOWN -->
         <div id="kategoriMenu"
-             class="hidden absolute right-0 mt-3 w-48 bg-white rounded-xl shadow-lg p-3 text-[#4A5D49] space-y-2">
+            class="absolute right-0 mt-4 w-72 bg-[#fafaf7] rounded-2xl shadow-xl p-3 space-y-2 opacity-0 scale-95 -translate-y-2 pointer-events-none
+            transition-all duration-200 ease-out">
 
-            <form action="katalog.php" method="GET" class="space-y-2">
-                <button name="kategori" value="Pakaian"
-                        class="w-full py-2 rounded-full border hover:bg-gray-100">Pakaian</button>
 
-                <button name="kategori" value="Elektronik"
-                        class="w-full py-2 rounded-full border hover:bg-gray-100">Elektronik</button>
-
-                <button name="kategori" value="Rumah Tangga"
-                        class="w-full py-2 rounded-full border hover:bg-gray-100">Rumah Tangga</button>
-
-                <button name="kategori" value="Buku"
-                        class="w-full py-2 rounded-full border hover:bg-gray-100">Buku</button>
-            </form>
+            <?php
+            $kategori = [
+                ['Elektronik', 'elektronik.svg'],
+                ['Pakaian', 'pakaian.svg'],
+                ['Rumah Tangga', 'rumahtangga.svg'],
+                ['Buku', 'buku.svg']
+            ];
+            foreach ($kategori as $k):
+            ?>
+            <a href="katalog.php?kategori=<?= $k[0]; ?>"
+               class="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#3e5648] text-white hover:opacity-70 hover:text-[#fafaf7] border border-[#3e5648] transition">
+                <img src="../assets/icons/<?= $k[1]; ?>" class="w-6 h-6">
+                <span class="text-lg"><?= $k[0]; ?></span>
+            </a>
+            <?php endforeach; ?>
 
         </div>
     </div>
@@ -49,18 +60,25 @@
 </nav>
 
 <script>
-// Toggle kategori dropdown
-document.getElementById("kategoriToggle").onclick = () => {
-    document.getElementById("kategoriMenu").classList.toggle("hidden");
-};
-
-// Close dropdown when clicking outside
-document.addEventListener("click", function(e){
-    const dropdown = document.getElementById("kategoriMenu");
+document.addEventListener("DOMContentLoaded", function () {
     const toggle = document.getElementById("kategoriToggle");
+    const menu   = document.getElementById("kategoriMenu");
 
-    if (!dropdown.contains(e.target) && !toggle.contains(e.target)) {
-        dropdown.classList.add("hidden");
-    }
+    if (!toggle || !menu) return;
+
+    toggle.addEventListener("click", function (e) {
+        e.stopPropagation();
+
+        menu.classList.toggle("opacity-0");
+        menu.classList.toggle("scale-95");
+        menu.classList.toggle("-translate-y-2");
+        menu.classList.toggle("pointer-events-none");
+    });
+
+    document.addEventListener("click", function (e) {
+        if (!menu.contains(e.target) && !toggle.contains(e.target)) {
+            menu.classList.add("opacity-0", "scale-95", "-translate-y-2", "pointer-events-none");
+        }
+    });
 });
 </script>

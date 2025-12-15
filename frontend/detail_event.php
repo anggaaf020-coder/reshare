@@ -2,72 +2,90 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detail Event | ReShare</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { scrollbar-width: none; }
     </style>
 </head>
 
-<body class="bg-[#F4F1E3] p-10">
+<body class="relative min-h-screen bg-[#fafaf7]">
 
-    <!-- Back Button -->
-    <a href="event.php" class="text-xl text-[#4A5D49] mb-6 inline-block">
-        ← Event
+<!-- ================= BACKGROUND ================= -->
+<div class="absolute inset-0 -z-10 bg-cover bg-center"
+     style="background-image:url('../assets/images/background/bg2.jpg');">
+    <div class="absolute inset-0 bg-[#fafaf7]/30"></div>
+</div>
+
+<!-- ================= CONTENT ================= -->
+<div class="max-w-6xl mx-auto pt-36 px-10">
+
+    <div class="grid grid-cols-2 gap-12 items-stretch">
+    <a href="javascript:history.back()"
+    class="absolute top-6 left-6 flex items-center gap-1
+          text-[#fafaf7] font-medium hover:opacity-80 transition">
+
+    <img src="/reshare/assets/icons/back.svg" class="w-10 h-10" alt="Back">
+    <span class="text-[30px] font-semibold text-[3e5648]">Kembali</span>
     </a>
 
-    <div class="bg-white rounded-2xl p-8 shadow flex gap-10">
-
-        <!-- Poster -->
-        <div class="w-1/2">
-            <img src="../assets/events/event1.png"
-                 class="w-full h-[400px] rounded-xl object-cover shadow"
-                 alt="Event Poster">
-
-            <!-- Slider dots (opsional) -->
-            <div class="flex justify-center gap-2 mt-4">
-                <div class="w-3 h-3 bg-black rounded-full"></div>
-                <div class="w-3 h-3 bg-gray-400 rounded-full"></div>
-                <div class="w-3 h-3 bg-gray-400 rounded-full"></div>
-            </div>
+        <!-- ================= LEFT : IMAGE SLIDER ================= -->
+        <div class="bg-white rounded-3xl p-10 shadow-xl flex flex-col justify-between min-h-[480px]">
+                <!-- Gambar dummy -->
+                <img src="../assets/images/event/event1.jpg"
+                     class="w-full h-full rounded-3xl object-cover flex-shrink-0 shadow">
         </div>
 
-        <!-- Info Event -->
-        <div class="w-1/2">
+        <!-- ================= RIGHT : DETAIL ================= -->
+        <div class="bg-white rounded-3xl p-10 shadow-xl flex flex-col justify-between min-h-[480px]">
 
-            <p class="text-sm text-gray-600">Pakaian</p>
+            <div> 
+                <h1 class="text-2xl font-semibold text-[#3e5648]">
+                    Open Donasi Pengabdian Masyarakat
+                </h1>
 
-            <h2 class="text-3xl font-semibold text-[#4A5D49]">
-                Sedekah Buku, Buka Jendela Dunia
-            </h2>
+                <p class="text-sm text-[#3e5648] mt-1">
+                    IKMP Salatiga &nbsp;|&nbsp; Kota Salatiga
+                <div class="border-b-2 border-[#7fb7a4]/50 mt-1"></div>
+                </p>
 
-            <p class="text-gray-600 mt-2">
-                Oleh: RS Surya Medika · 08xxxxxxxxxx
-            </p>
+                <h2 class="font-semibold text-[#3e5648] mt-3 mb-1">Deskripsi</h2>
 
-            <hr class="my-4 border-[#4A5D49] opacity-40">
+                <p class="text-[#4A5D49] leading-relaxed">
+                    Ikatan Mahasiswa Pati menyelenggarakan kegiatan pengabdian
+                    masyarakat dengan membuka donasi bagi siapa pun yang ingin
+                    berpartisipasi. Donasi yang diterima berupa:
+                </p>
 
-            <h3 class="font-semibold text-lg text-[#4A5D49]">Deskripsi</h3>
+                <ol class="list-decimal list-inside mt-4 text-[#3e5648] space-y-1">
+                    <li>Buku</li>
+                    <li>Alat tulis</li>
+                    <li>Dana</li>
+                </ol>
+            </div>
 
-            <p class="text-gray-700 mt-2 leading-relaxed">
-                Event ini bertujuan untuk mengajak masyarakat menyumbangkan buku layak baca untuk dibagikan
-                kepada anak-anak di berbagai daerah. Anda dapat mendaftar melalui WhatsApp.
-            </p>
+            <!-- ================= BUTTON ================= -->
+            <div class="mt-10 flex justify-end">
+                <a href="https://wa.me/6281234567890"
+                   target="_blank"
+                   class="inline-flex items-center gap-2 bg-[#7fb7a4] text-white px-4 py-1 rounded-full font-semibold shadow-sm hover:opacity-90 transition">
 
-            <!-- Tombol daftar -->
-            <a href="https://wa.me/6281234567890?text=Halo,%20saya%20ingin%20mendaftar%20event%20ReShare"
-               target="_blank"
-               class="mt-6 inline-block bg-[#4A5D49] text-white px-10 py-2 rounded-full font-semibold hover:opacity-90 transition">
-                Daftar
-            </a>
+                    <img src="../assets/icons/kontak.svg" class="w-4 h-4" alt="">
+                    Hubungi
+                </a>
+            </div>
 
         </div>
 
     </div>
+</div>
+
+<script src="../js/back.js"></script>
 
 </body>
 </html>

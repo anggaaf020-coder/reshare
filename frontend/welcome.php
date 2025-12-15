@@ -1,5 +1,5 @@
 <?php
-include 'components/navbar.php'; ?>
+include 'components/navbar_p.php'; ?>
 
 <!DOCTYPE html>
 <html lang="id">
@@ -12,7 +12,7 @@ include 'components/navbar.php'; ?>
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- FONT -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         body {
@@ -33,7 +33,7 @@ include 'components/navbar.php'; ?>
 <body class="bg-white">
 
     <!-- ================= HERO FULLSCREEN ================= -->
-    <section class="relative h-[90vh] w-full overflow-hidden">
+    <section class="relative h-[95vh] w-full overflow-hidden">
 
         <!-- BACKGROUND SLIDER -->
         <div class="absolute inset-0">
@@ -52,9 +52,9 @@ include 'components/navbar.php'; ?>
         <div class="absolute inset-0 bg-black bg-opacity-40"></div>
 
         <!-- Text -->
-        <div class="relative z-10 text-center text-white px-10 pt-40 max-w-4xl mx-auto">
+        <div class="relative z-10 text-center text-white px-10 pt-48 max-w-4xl mx-auto">
 
-            <h1 class="text-4xl font-bold mb-6 drop-shadow-lg font-sans-serif ">Selamat Datang di ReShare</h1>
+            <h1 class="text-5xl font-bold mb-6 drop-shadow-lg font-sans-serif ">Selamat Datang di ReShare</h1>
 
             <p class="text-base leading-relaxed text-gray-200 drop-shadow">
                 ReShare merupakan platform yang menyediakan tempat untuk saling membantu dan mendukung satu sama lain.
@@ -65,16 +65,32 @@ include 'components/navbar.php'; ?>
             <!-- Buttons in Hero -->
             <div class="flex justify-center gap-6 mt-10">
                 <a href="home.php"
-                   class="bg-[#F4F1E3] text-[#4A5D49] px-8 py-2 rounded-full font-semibold shadow hover:bg-white transition">
-                    Lihat Katalog
+                   class="bg-[#fafaf7] text-[#3e5648] px-8 py-2 rounded-full font-semibold shadow hover:bg-white transition">
+                    Jelajahi Sekarang
                 </a>
 
                 <a href="upload_barang.php"
-                   class="bg-[#F4F1E3] text-[#4A5D49] px-8 py-2 rounded-full font-semibold shadow hover:bg-white transition">
+                   class="bg-[#fafaf7] text-[#3e5648] px-8 py-2 rounded-full font-semibold shadow hover:bg-white transition">
                     Donasi Barang
                 </a>
             </div>
         </div>
+      <!-- Overlay gelap tipis (opsional, sangat ringan) -->
+  <div class="absolute inset-0 bg-black/10"></div>
+
+  <!-- Overlay putih menyebar -->
+  <div class="absolute bottom-0 left-0 w-full h-[45%] pointer-events-none
+  [background:radial-gradient(120%_80%_at_50%_100%,rgba(250,250,247,0.85)_0%,rgba(250,250,247,0.55)_30%,rgba(250,250,247,0.25)_50%,transparent_75%)]">
+</div>
+
+
+  <!-- TRANSISI HERO → SECTION BAWAH -->
+<div class="absolute bottom-0 left-0 w-full h-24 pointer-events-none
+    bg-gradient-to-t
+    from-[#fafaf7]
+    via-[#fafaf7]/30
+    to-transparent">
+</div>
     </section>
 
     <!-- ================= MOTTO (FULL WHITE) ================= -->
@@ -82,7 +98,7 @@ include 'components/navbar.php'; ?>
         <div class="w-full max-w-6xl flex gap-14 items-center">
 
             <!-- ILUSTRASI -->
-            <img src="../assets/images/welcome-illustration.png"
+            <img src="../assets/images/items/wcp.png"
                  alt="donate illustration"
                  class="w-1/3 rounded-lg shadow">
 
@@ -101,10 +117,12 @@ include 'components/navbar.php'; ?>
             </div>
 
         </div>
+
     </section>
 
     <?php include 'components/footer.php';  ?>
 
+        <script src="../js/dropdown.js"> </script>
         <script>
             const images = [
                 "../assets/images/background/slide1.jpg",
@@ -130,6 +148,7 @@ include 'components/navbar.php'; ?>
                     bg2.classList.add("opacity-0");
                 }, 1500); 
             }, 5000);
+
         </script>
 
 

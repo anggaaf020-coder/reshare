@@ -19,41 +19,55 @@
 </head>
 
 <body class="h-screen bg-[#F4F1E3]">
-
-    <div class="flex h-full">
+    <div class="relative h-full overflow-hidden">
+    <div
+        class="absolute inset-0 -z-10 bg-cover bg-center opacity-70"
+        style="background-image: url('../assets/images/background/bg4.jpg');">
+    </div>
+   
+<!-- conten -->
+    <div class="h-[80%] flex mt-20 mx-20 bg-white rounded-[40px] overflow-hidden shadow-xl" >
 
         <!-- LEFT SIDE IMAGE -->
-        <div class="w-1/2 bg-[#F4F1E3] flex items-center justify-center px-10">
-            <img src="../assets/images/register-art.png"
-                 class="w-4/5 max-h-[85%] object-cover opacity-90 rounded-xl shadow-lg"
-                 alt="gambar ilustrasi">
+        <div class="relative w-1/2 bg-[#F4F1E3] flex items-center justify-center px-10"
+             style="background-image: url('../assets/images/background/bg4.jpg');">
+            <div>
+                <img src="../assets/images/logo/login.png" alt="" class="w-96 relative flex item-center justify-center">
+            </div>
         </div>
 
         <!-- RIGHT SIDE -->
-        <div class="w-1/2 bg-[#4A5D49] flex items-center justify-center px-16">
+        <div class="w-1/2 bg-[#3e5648] flex items-center justify-center px-16">
 
-            <div class="w-full max-w-xl text-white">
+            <div class="w-full max-w-xl text-[#fafaf7]">
 
                 <!-- Header -->
                 <h1 class="text-3xl font-semibold text-center tracking-wide">
                     Selamat Datang di <span class="text-[#F4F1E3]">ReShare</span>
                 </h1>
-                <div class="w-1/2 mx-auto mt-4 border-b border-gray-300"></div>
+                <p class="text-sm text-center tracking-wide mt-2 mb-2">Ayo mulai berbagi barang bermanfaat</p>
+                <div class="w-50 mx-auto mt-4 border-b border-gray-300"></div>
 
                 <!-- FORM -->
-                <form action="../backend/auth/register_process.php" method="POST" class="mt-10">
+                <form action="../backend/auth/register_process.php" method="POST" class="mt-8">
 
                     <!-- GRID INPUT: NAMA + EMAIL -->
                     <div class="grid grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-sm mb-1">Nama</label>
+                            <label class="block text-sm font-semibold mb-1 flex items-center justify-start gap-2">
+                            <img src="../assets/icons/user.svg" alt="" class="flex items-center">
+                            Nama
+                            </label>
                             <input type="text" name="username"
                                    class="w-full px-4 py-2 rounded-full text-black focus:outline-none shadow-sm"
                                    placeholder="Nama lengkap" required>
                         </div>
 
                         <div>
-                            <label class="block text-sm mb-1">Email</label>
+                            <label class="block text-sm font-semibold mb-1 flex item-center justify-start gap-2">
+                            <img src="../assets/icons/email.svg" alt="" class="flex item-center">
+                            Email
+                            </label>
                             <input type="email" name="email"
                                    class="w-full px-4 py-2 rounded-full text-black focus:outline-none shadow-sm"
                                    placeholder="Email aktif" required>
@@ -63,38 +77,47 @@
                     <!-- GRID INPUT: PASSWORD + NO HP -->
                     <div class="grid grid-cols-2 gap-6 mt-6">
                         <div>
-                            <label class="block text-sm mb-1">Password</label>
+                            <label class="block text-sm font-semibold mb-1 flex item-center justify-start gap-2">
+                            <img src="../assets/icons/password.svg" alt="" class="flex item-center">
+                            Password
+                            </label>
                             <input type="password" name="password"
                                    class="w-full px-4 py-2 rounded-full text-black focus:outline-none shadow-sm"
                                    placeholder="Minimal 6 karakter" required>
                         </div>
 
                         <div>
-                            <label class="block text-sm mb-1">No Handphone</label>
+                            <label class="block text-sm font-semibold mb-1 flex item-center justify-start gap-2">
+                            <img src="../assets/icons/kontak.svg" alt="" class="flex item-center">
+                            No Handphone
+                            </label>
                             <input type="text" name="nomor"
                                    class="w-full px-4 py-2 rounded-full text-black focus:outline-none shadow-sm"
                                    placeholder="08xxxxxxxx" required>
                         </div>
                     </div>
 
+                    <!-- Masuk -->
+                    <button type="button"
+                        class="w-full bg-[#7fb7a4] text-white mt-7 py-2 rounded-full font-semibold shadow hover:bg-gray-200 transition">
+                        Sign In
+                    </button>
+
                     <!-- Garis OR -->
                     <div class="flex items-center gap-4 my-6">
                         <div class="flex-1 border-t border-gray-300"></div>
-                        <span class="text-sm text-gray-200">Or</span>
+                        <span class="text-sm text-gray-200">Atau</span>
                         <div class="flex-1 border-t border-gray-300"></div>
                     </div>
 
-                    <!-- Login dengan Google -->
-                    <button type="button"
-                        class="w-full bg-white text-[#4A5D49] py-2 rounded-full font-semibold shadow hover:opacity-90 transition">
-                        Google
-                    </button>
+                    
 
-                    <!-- Sign In Button -->
-                    <div class="flex justify-end mt-6">
+                    <!-- Login dengan Google -->
+                    <div class="flex justify-center mt-6">
                         <button type="submit"
-                                class="px-8 py-2 bg-[#F4F1E3] text-[#4A5D49] rounded-full text-lg font-semibold shadow hover:bg-gray-200 transition">
-                            SignIn
+                                class="w-100 px-8 py-2 pt-2 bg-[#7fb7a4] text-[#fafaf7] rounded-full text-xl font-bold shadow hover:bg-gray-200 transition">
+                            <img src="../assets/icons/google.svg" alt="Google Logo" class="inline w-6 h-6 mr-2 align-middle">
+                            Google
                         </button>
                     </div>
 
@@ -110,6 +133,7 @@
 
         </div>
 
+    </div>
     </div>
 
 </body>

@@ -1,31 +1,63 @@
-<footer class="bg-[#EEEBD9] text-[#4A5D49] py-10 mt-20">
-    <div class="max-w-6xl mx-auto px-10 grid grid-cols-3 gap-10">
+<footer class="bg-[#3e5648] text-white shadow-[0_-8px_24px_rgba(62,86,72,0.45)]">
+    <div class="max-w-7xl mx-auto px-10 py-8 flex items-start gap-10">
+        <!-- LEFT : LOGO & BRAND -->
+        <div class="flex items-center gap-1">
+            <img src="../assets/images/logo/ReShare.png" alt="ReShare Logo"
+                 class="w-full h-20 object-contain">
 
-        <div>
-            <h3 class="font-semibold mb-2">ReShare</h3>
-            <p class="text-sm text-gray-600">
-                Platform berbagi barang bekas untuk keberlanjutan dan kebaikan.
-            </p>
+            <h2 class="text-3xl font-semibold tracking-wide">
+            </h2>
         </div>
 
-        <div>
-            <h3 class="font-semibold mb-2">Menu</h3>
-            <ul class="text-sm text-gray-700 space-y-1">
-                <li><a href="home.php">Home</a></li>
-                <li><a href="katalog.php">Katalog</a></li>
-                <li><a href="event.php">Event</a></li>
-                <li><a href="upload_barang.php">Donasi</a></li>
-            </ul>
+        <!-- CENTER : MOTTO -->
+        <div class="flex items-start gap-6">
+            <div class="w-[2px] h-16 bg-white/70"></div>
+
+            <div class="text-lg leading-relaxed">
+                <p class="font-medium">
+                    Kurangi Sampah Hari ini, Berbagi Kebaikan Selamanya
+                </p>
+                <p class="mt-2 opacity-80">
+                    ©2025 ReShare All right reserved
+                </p>
+            </div>
         </div>
 
-        <div>
-            <h3 class="font-semibold mb-2">Support</h3>
-            <ul class="text-sm text-gray-700 space-y-1">
-                <li><a href="mailto:reshare@gmail.com">Help Center</a></li>
-                <li>Instagram</li>
-                <li>Twitter</li>
-                <li>Facebook</li>
-            </ul>
+        <!-- RIGHT : SOCIAL & SUPPORT -->
+        <div class="ml-auto flex flex-col items-end gap-2">
+
+            <!-- SOCIAL ICONS -->
+            <div class="flex items-center gap-4">
+                <a href="https://instagram.com/reshare"
+                   target="_blank"
+                   class="hover:opacity-80 transition">
+                    <img src="../assets/icons/ig.svg" class="w-10 h-10">
+                </a>
+
+                <a href="https://tiktok.com/@reshare"
+                   target="_blank"
+                   class="hover:opacity-80 transition">
+                    <img src="../assets/icons/tt.svg" class="w-10 h-10">
+                </a>
+
+                <a href="https://youtube.com/@reshare"
+                   target="_blank"
+                   class="hover:opacity-80 transition">
+                    <img src="../assets/icons/yt.svg" class="w-10 h-10">
+                </a>
+
+                <a href="https://x.com/reshare"
+                   target="_blank"
+                   class="hover:opacity-80 transition">
+                    <img src="../assets/icons/twit.svg" class="w-10 h-10">
+                </a>
+            </div>
+
+            <!-- SUPPORT EMAIL -->
+            <a href="mailto:reshare@gmail.com"
+               class="text-lg opacity-90 hover:underline">
+                Support : reshare@gmail.com
+            </a>
         </div>
 
     </div>

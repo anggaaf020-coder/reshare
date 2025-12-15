@@ -10,7 +10,7 @@
     <title>Ganti Username | ReShare</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         body {
@@ -19,92 +19,100 @@
     </style>
 </head>
 
-<body class="bg-[#F7F5EB]">
+<body class="h-screen bg-[#F4F1E3]">
+  <div class="relative h-full overflow-hidden">
 
-    <!-- HEADER -->
-    <div class="flex items-center gap-3 px-5 py-4 bg-[#EEEBD9]">
-        <a href="../home.php" class="text-xl">&#8592;</a>
-        <h2 class="text-lg font-semibold text-[#4A5D49]">Ganti Username</h2>
+    <!-- BACKGROUND -->
+    <div class="absolute inset-0 -z-10 bg-cover bg-center"
+         style="background-image: url('/reshare/assets/images/background/bg3.jpg');">
+    <div class="absolute inset-0 bg-[#fafaf7]/40"></div>
     </div>
 
-    <!-- MAIN SECTION -->
-    <div class="grid grid-cols-2 px-20 py-10">
+    <!-- CARD -->
+    <div class="h-[80%] flex mt-20 mx-20 rounded-[40px] bg-[#fafaf7] overflow-hidden shadow-xl">
+    
+    <!-- LEFT PANEL -->
+      <div class="w-1/2 bg-[#3e5648] px-16 py-12 flex flex-col items-center justify-center">
+      <!-- BACK BUTTON -->
+    <a href="javascript:history.back()"
+   class="absolute top-6 left-6 flex items-center gap-1
+          text-[#fafaf7] font-medium hover:opacity-80 transition">
 
-        <!-- LEFT FORM -->
-        <div class="flex flex-col justify-center">
-
-            <h1 class="text-2xl font-semibold text-center text-[#4A5D49] mb-6">
-                Selamat Datang di <br> ReShare
+    <img src="/reshare/assets/icons/back.svg" class="w-8 h-8" alt="Back">
+    <span class="text-xl font-semibold text-[#3e5648]">Kembali</span>
+    </a>
+        <!-- HEADER -->
+        <div class="flex flex-col items-center text-center">
+        <div class="flex items-center gap-4">
+            <img src="/reshare/assets/icons/user.svg"
+                class="w-12 h-12 "
+                alt="User Icon">
+            <h1 class="text-5xl font-semibold text-[#fafaf7]">
+            Ganti Username
             </h1>
+        </div>
 
-            <!-- USERNAME LAMA -->
-            <label class="text-sm">Username lama</label>
-            <input id="oldUsername" type="text"
-                   class="w-[80%] px-4 py-2 bg-[#4A5D49] text-white rounded-full mt-1 mb-4 shadow outline-none">
-
-            <!-- USERNAME BARU -->
-            <label class="text-sm">Username baru</label>
-            <input id="newUsername" type="text"
-                   class="w-[80%] px-4 py-2 bg-[#4A5D49] text-white rounded-full mt-1 mb-4 shadow outline-none">
-
-            <!-- CEK USERNAME -->
-            <button id="checkBtn"
-                    class="mt-2 bg-white text-[#4A5D49] shadow px-6 py-1 rounded-full w-[40%] hover:bg-gray-100 transition">
-                Cek Username
-            </button>
-
-            <p id="checkResult" class="mt-2 text-sm"></p>
-
-            <!-- SUBMIT -->
-            <form action="../../backend/user/update_name.php" method="POST">
-                <input type="hidden" name="new_username" id="hiddenUsername">
-                <button type="submit"
-                        class="mt-6 bg-[#4A5D49] text-white px-6 py-1 rounded-full w-[40%] hover:opacity-90 transition">
-                    Send
-                </button>
-            </form>
+          <!-- Divider -->
+          <div class="max-w-lg w-full mt-7 border-b-[3px] border-[#fafaf7]/80"></div>
 
         </div>
 
-        <!-- RIGHT ILLUSTRATION -->
-        <div class="flex items-center justify-center">
-            <div class="w-[70%] h-[70%] bg-gray-200 flex items-center justify-center rounded-xl">
-                gambar
-            </div>
+        <!-- FORM -->
+        <div class="mt-10 space-y-3 w-full max-w-md">
+
+          <div>
+            <label class="block text-sm font-semibold text-[#fafaf7] mb-2">
+              USERNAME LAMA
+            </label>
+            <input type="text"
+                   class="w-full rounded-full px-5 py-3 text-gray-700 text-sm focus:outline-none shadow-sm" placeholder="Masukkan Username lama" required>
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-[#fafaf7] mb-2">
+              USERNAME BARU
+            </label>
+            <input type="text"
+                   class="w-full rounded-full px-5 py-3 text-gray-700 text-sm focus:outline-none shadow-sm" placeholder="Masukkan Username baru" required>
+          </div>
+
+          <!-- BUTTONS -->
+        <div class="grid grid-cols-2 gap-4 pt-10 max-w-lg w-full">
+        
+        <button
+            class="w-full py-3 rounded-full border-2 border-[#fafaf7] 
+                text-[#fafaf7] font-semibold
+                hover:bg-white/10 transition">
+            CEK KETERSEDIAAN
+        </button>
+
+        <button
+            class="w-full py-3 rounded-full bg-[#8bbfa9] 
+                text-white font-semibold
+                hover:opacity-90 transition">
+            UBAH
+        </button>
+
         </div>
+
+
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div class="w-1/2 bg-cover bg-center flex items-center justify-center"
+           style="background-image: url('/reshare/assets/images/background/bg3.jpg');">
+        <div class="text-center">
+          <img src="/reshare/assets/images/logo/login.png"
+               class="w-96 relative flex item-center justify-center"
+               alt="ReShare Logo">
+        </div>
+      </div>
 
     </div>
+  </div>
 
-
-    <!-- JS: CEK USERNAME -->
-    <script>
-        document.getElementById("checkBtn").onclick = () => {
-            let newUser = document.getElementById("newUsername").value;
-
-            if (newUser.trim() === "") {
-                document.getElementById("checkResult").innerHTML =
-                    "<span class='text-red-500'>Username tidak boleh kosong</span>";
-                return;
-            }
-
-            fetch("../../backend/user/check_username.php?username=" + newUser)
-                .then(res => res.text())
-                .then(data => {
-
-                    const hiddenInput = document.getElementById("hiddenUsername");
-
-                    if (data === "available") {
-                        document.getElementById("checkResult").innerHTML =
-                            "<span class='text-green-600'>Username tersedia ✓</span>";
-                        hiddenInput.value = newUser; 
-                    } else {
-                        document.getElementById("checkResult").innerHTML =
-                            "<span class='text-red-500'>Username sudah dipakai ✗</span>";
-                        hiddenInput.value = ""; 
-                    }
-                });
-        };
-    </script>
+  <script src="/js/back.js"></script>
 
 </body>
 </html>

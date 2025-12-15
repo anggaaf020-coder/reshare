@@ -1,129 +1,104 @@
-<?php
-/* include 'components/navbar.php'; */
-?>
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <title>Detail Event | ReShare</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail Barang | ReShare</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
-
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { scrollbar-width: none; }
     </style>
 </head>
 
-<body class="bg-[#F7F5EB]">
+<body class="relative min-h-screen bg-[#fafaf7]">
 
-    <!-- ================= HEADER ================= -->
-    <div class="flex items-center gap-3 px-5 py-4 bg-[#EEEBD9]">
-        <a href="katalog.php" class="text-xl">&#8592;</a>
-        <h2 class="text-lg font-semibold text-[#4A5D49]">Ambil</h2>
-    </div>
+<!-- ================= BACKGROUND ================= -->
+<div class="absolute inset-0 -z-10 bg-cover bg-center"
+     style="background-image:url('../assets/images/background/bg2.jpg');">
+    <div class="absolute inset-0 bg-[#fafaf7]/30"></div>
+</div>
 
-    <!-- ================= MAIN DETAIL ================= -->
-    <div class="px-10 py-10 grid grid-cols-2 gap-10">
+<!-- ================= CONTENT ================= -->
+<div class="max-w-6xl mx-auto pt-36 px-10">
 
-        <!-- ========== FOTO SLIDER ========== -->
-        <div class="bg-white rounded-2xl shadow p-5 border border-gray-200 flex flex-col">
+    <div class="grid grid-cols-2 gap-12 items-stretch">
+   <a href="javascript:history.back()"
+   class="absolute top-6 left-6 flex items-center gap-1
+          text-[#fafaf7] font-medium hover:opacity-80 transition">
 
-            <div class="w-full h-[350px] rounded-xl bg-gray-100 overflow-hidden">
-                <img id="mainFoto"
-                     src="../assets/items/sample1.jpg"
-                     class="w-full h-full object-cover">
-            </div>
+    <img src="/reshare/assets/icons/back.svg" class="w-10 h-10" alt="Back">
+    <span class="text-[30px] font-semibold text-[#3e5648]">Kembali</span>
+    </a>
 
-            <!-- Thumbnail & Dots -->
-            <div class="flex justify-center gap-3 mt-4">
-
-                <div class="w-3 h-3 bg-black rounded-full slider-dot" data-img="../assets/items/sample1.jpg"></div>
-                <div class="w-3 h-3 bg-gray-300 rounded-full slider-dot" data-img="../assets/items/sample2.jpg"></div>
-                <div class="w-3 h-3 bg-gray-300 rounded-full slider-dot" data-img="../assets/items/sample3.jpg"></div>
-
-            </div>
+        <!-- ================= LEFT : IMAGE SLIDER ================= -->
+        <div class="bg-white rounded-3xl p-10 shadow-xl flex flex-col justify-between min-h-[480px]">
+                <!-- Gambar dummy -->
+                <img src="../assets/images/event/event1.jpg"
+                     class="w-full h-full rounded-3xl object-cover flex-shrink-0 shadow">
         </div>
 
+        <!-- ================= RIGHT : DETAIL ================= -->
+        <div class="bg-white rounded-3xl p-10 shadow-xl flex flex-col justify-between min-h-[480px]">
 
-        <!-- ========== INFORMASI BARANG ========== -->
-        <div>
+            <div>
+        <p class="text-[#3e5648] font-medium">
+            Kategori : Elektronik
+        </p>
 
-            <p class="text-sm text-gray-500">Kategori: &lt;kategori&gt;</p>
+        <h1 class="text-3xl font-semibold text-[#3e5648] mt-2">
+            TV TCL 32-Inch
+        </h1>
 
-            <h1 class="text-2xl font-semibold text-[#4A5D49] mt-1">
-                &lt;nama produk&gt;
-            </h1>
+        <p class="text-sm text-gray-600 mt-3">
+            Nama donatur | Alamat Donatur | 08xxxxxxxx
+        </p>
 
-            <!-- Donatur -->
-            <p class="text-sm text-gray-600 mt-2">
-                &lt;nama donatur&gt; |
-                &lt;alamat donatur&gt; |
-                &lt;08xxxxxxxx&gt;
-            </p>
+        <div class="border-b border-[#7fb7a4] my-6"></div>
 
-            <hr class="border-gray-300 my-4">
+        <!-- Kondisi -->
+        <p class="font-semibold text-[#3e5648] mb-2">Kondisi Barang</p>
+        <span class="inline-block px-6 py-1 rounded-full
+                     bg-[#6B7F72] text-white text-sm">
+            Bagus
+        </span>
 
-            <!-- Kondisi -->
-            <p class="font-semibold text-[#4A5D49]">Kondisi Barang</p>
-            <p class="text-sm text-gray-700 mt-1">
-                &lt;kondisi barang&gt;
-            </p>
+        <div class="border-b border-[#7fb7a4] my-6"></div>
 
-            <hr class="border-gray-300 my-4">
+        <!-- Deskripsi -->
+        <p class="font-semibold text-[#3e5648] mb-2">Deskripsi</p>
+        <p class="text-sm text-gray-700 leading-relaxed">
+            TV TCL ukuran 32 Inch, 2 tahun pemakaian,
+            masih bagus dan layar jernih.
+        </p>
+    </div>
 
-            <!-- Deskripsi -->
-            <p class="font-semibold text-[#4A5D49]">Deskripsi</p>
-            <p class="text-sm text-gray-700 mt-2 leading-relaxed">
-                &lt;deskripsi lengkap barang&gt;
-            </p>
-
-            <!-- Tombol -->
-            <div class="mt-8 flex gap-4">
-
-                <!-- TOMBOL HUBUNGI WA -->
-                <a id="btnWA"
-                   href="https://wa.me/628XXXXXX?text=Halo%20saya%20ingin%20mengambil%20barang%20Anda"
-                   target="_blank"
-                   class="bg-[#4A5D49] text-white px-6 py-2 rounded-full shadow hover:opacity-90 transition">
-                    Hubungi
-                </a>
-
-                <!-- TOMBOL AMBIL -->
-                <form action="../backend/items/ambil_item.php" method="POST">
-                    <input type="hidden" name="item_id" value="<?php echo $_GET['id'] ?? 0; ?>">
-                    <button type="submit"
-                        class="bg-white text-[#4A5D49] px-6 py-2 rounded-full shadow border hover:bg-gray-100 transition">
-                        Ambil
-                    </button>
-                </form>
-
-            </div>
+            <!-- ================= BUTTON ================= -->
+            <div class="mt-10 flex justify-end gap-4">
+            <a href="https://wa.me/6281234567890"
+                target="_blank"
+                class="inline-flex items-center gap-2 bg-[#7fb7a4] text-white px-4 py-1 rounded-full font-semibold shadow-sm hover:opacity-90 transition">
+                <img src="../assets/icons/kontak.svg" class="w-4 h-4" alt="">
+                Hubungi
+            </a>
+        <button
+            class="flex items-center gap-2
+                   border border-[#7fb7a4]
+                   text-[#3e5648]
+                   px-10 py-1 rounded-full
+                   hover:bg-[#7fb7a4]/10 transition">
+            Ambil
+        </button>
 
         </div>
 
     </div>
+</div>
 
-    <script>
-        const mainFoto = document.getElementById("mainFoto");
-        const dots = document.querySelectorAll(".slider-dot");
-
-        dots.forEach(dot => {
-            dot.addEventListener("click", () => {
-                mainFoto.src = dot.dataset.img;
-
-                dots.forEach(d => d.classList.remove("bg-black"));
-                dots.forEach(d => d.classList.add("bg-gray-300"));
-                dot.classList.remove("bg-gray-300");
-                dot.classList.add("bg-black");
-            });
-        });
-    </script>
+<script src="../js/back.js"></script>
 
 </body>
 </html>
