@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ReShare - Platform Berbagi Barang Bekas Layak Pakai
 
 ## Tentang ReShare
@@ -141,3 +142,6 @@ Proyek production-ready untuk platform berbagi barang sustainable dengan dampak 
 ## Lisensi
 
 Educational Project - 2025
+=======
+# reshare
+>>>>>>> 3ce806d7dd898541e8ce1d1e18e4778f1f3617cb
