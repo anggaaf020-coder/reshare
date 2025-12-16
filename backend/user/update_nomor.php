@@ -1,41 +1,77 @@
 <?php
-require_once '../config/connection.php';
-require_once '../utils/helper.php';
-require_once '../utils/protection.php';
+session_start();
+require_once __DIR__ . '/../config/connection.php';
 
-requireLogin();
-validatePostRequest();
-
-$userId = getCurrentUserId();
-$oldNomor = sanitize($_POST['old_nohp'] ?? '');
-$newNomor = sanitize($_POST['new_nohp'] ?? '');
-
-if (empty($oldNomor) || empty($newNomor)) {
-    $_SESSION['error'] = 'Both fields are required';
-    redirect('../../frontend/settings/ganti_nomor.php');
+// ================= PROTEKSI LOGIN =================
+if (empty($_SESSION['login']) || empty($_SESSION['user_id'])) {
+    header("Location: ../../frontend/login.php");
+    exit;
 }
 
-try {
-    setUserContext($pdo, $userId);
-
-    $stmt = $pdo->prepare("SELECT nomor FROM users WHERE id = ?");
-    $stmt->execute([$userId]);
-    $user = $stmt->fetch();
-
-    if ($user['nomor'] !== $oldNomor) {
-        $_SESSION['error'] = 'Old phone number does not match';
-        redirect('../../frontend/settings/ganti_nomor.php');
-    }
-
-    $stmt = $pdo->prepare("UPDATE users SET nomor = ? WHERE id = ?");
-    $stmt->execute([$newNomor, $userId]);
-
-    $_SESSION['user_nomor'] = $newNomor;
-    $_SESSION['success'] = 'Phone number updated successfully!';
-    redirect('../../frontend/home.php');
-
-} catch (PDOException $e) {
-    $_SESSION['error'] = 'Failed to update phone number';
-    redirect('../../frontend/settings/ganti_nomor.php');
+// ================= PROTEKSI METHOD =================
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header("Location: ../../frontend/settings/ganti_nomor.php");
+    exit;
 }
-?>
+
+$userId   = (int) $_SESSION['user_id'];
+$newPhone = trim($_POST['new_phone'] ?? '');
+
+// ================= VALIDASI =================
+if ($newPhone === '') {
+    $_SESSION['error'] = 'Nomor telepon wajib diisi';
+    header("Location: ../../frontend/settings/ganti_nomor.php");
+    exit;
+}
+
+// hanya angka, panjang 10–15 digit
+if (!preg_match('/^[0-9]{10,15}$/', $newPhone)) {
+    $_SESSION['error'] = 'Nomor telepon tidak valid';
+    header("Location: ../../frontend/settings/ganti_nomor.php");
+    exit;
+}
+
+// ================= CEK DUPLIKASI =================
+$cek = $conn->prepare(
+    "SELECT id FROM users WHERE phone = ? AND id != ? LIMIT 1"
+);
+$cek->bind_param("si", $newPhone, $userId);
+$cek->execute();
+$cek->store_result();
+
+if ($cek->num_rows > 0) {
+    $_SESSION['error'] = 'Nomor telepon sudah digunakan';
+    $cek->close();
+    header("Location: ../../frontend/settings/ganti_nomor.php");
+    exit;
+}
+$cek->close();
+
+// ================= UPDATE =================
+$update = $conn->prepare(
+    "UPDATE users SET phone = ? WHERE id = ? LIMIT 1"
+);
+$update->bind_param("si", $newPhone, $userId);
+
+if (!$update->execute()) {
+    // SQL error nyata
+    $error = $update->error;
+    $update->close();
+    die("Database error: " . $error);
+}
+
+// ❗ INI BAGIAN PALING PENTING
+if ($update->affected_rows === 0) {
+    $update->close();
+    $_SESSION['error'] = 'Nomor tidak berubah atau data user tidak ditemukan';
+    header("Location: ../../frontend/settings/ganti_nomor.php");
+    exit;
+}
+
+// ================= SUKSES =================
+$_SESSION['phone']   = $newPhone;
+$_SESSION['success'] = 'Nomor telepon berhasil diubah';
+$update->close();
+
+header("Location: ../../frontend/home.php?updated=phone");
+exit;

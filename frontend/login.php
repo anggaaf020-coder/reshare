@@ -68,11 +68,11 @@ if (isset($_SESSION['user_id'])) {
                 <form action="../backend/auth/login_process.php" method="POST" class="mt-8">
 
                     <label class="block text-[#fafaf7] font-bold text-lg mb-1">Nama atau Email</label>
-                    <input type="text" name="username" class="w-full px-4 py-2 rounded-lg text-gray-700 bg-[#fafaf7] focus:outline-none shadow-sm" placeholder="Masukkan nama atau email" required>
+                    <input type="text" name="identifier" class="w-full px-4 py-2 rounded-lg text-gray-700 bg-[#fafaf7] focus:outline-none shadow-sm" placeholder="Masukkan nama atau email" required>
 
                     <label class="block text-[#fafaf7] font-bold text-lg mt-5 mb-1">Password</label>
                     <input type="password" name="password" class="w-full px-4 py-2 rounded-lg text-gray-700 bg-[#fafaf7] focus:outline-none shadow-sm" placeholder="Masukkan password" required>
-                    <p class="text-sm text-[#fafaf7] ">Lupa <a href="" class="font-bold hover:text-[#fafaf7]">password</a>?</p>
+                    <p class="text-sm text-[#fafaf7] mt-3">Lupa <a href="/reshare/frontend/settings/lupa_password.php" class="font-bold hover:text-[#fafaf7] mt-3">password</a>?</p>
 
                     <button type="submit" class="w-full py-2 rounded-lg mt-6 text-lg font-bold [text-shadow:0_2px_10px_rgba(0,0,0,0.4)] shadow hover:opacity-90 transition bg-[#7fb7a4]">
                     Login

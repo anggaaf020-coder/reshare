@@ -25,7 +25,7 @@
 
   <!-- ================= HERO CONTENT ================= -->
   <div class="relative z-10 h-full flex flex-col items-center justify-center text-center px-20">
-h
+
     <!-- LOGO -->
     <img id="heroLogo"
          src="/reshare/assets/images/logo/reshare.png"
@@ -44,7 +44,7 @@ h
 
     <!-- BUTTON -->
     <a id="ctaBtn"
-       href="home.php"
+       href="login.php"
        class="mt-14 px-14 py-4 rounded-full
               bg-[#FAFAF7] text-[#3e5648]
               text-lg font-bold tracking-wide

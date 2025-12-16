@@ -1,11 +1,4 @@
 <?php
-/**
- * REQUIRED:
- * $item     → data barang
- * $mode     → 'home' | 'katalog'
- * $basePath → path relatif ke root (misal '..')
- */
-
 $mode = $mode ?? 'katalog';
 $basePath = $basePath ?? '..';
 
@@ -25,9 +18,9 @@ $badgeClass = match($item['kondisi']) {
 
   <!-- IMAGE -->
   <img
-    src="<?= $basePath; ?>/assets/images/items/<?= $item['foto']; ?>"
-    alt="<?= $item['nama_barang']; ?>"
-    class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+    src="/reshare/<?= htmlspecialchars($item['foto']); ?>"
+    class="w-full h-full object-cover"
+    alt="<?= htmlspecialchars($item['nama_barang']); ?>"
   >
 
   <!-- OVERLAY -->
@@ -56,55 +49,75 @@ $badgeClass = match($item['kondisi']) {
   <!-- FOTO -->
   <div class="w-28 h-28 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100">
     <img
-      src="<?= $basePath; ?>/assets/images/items/<?= $item['foto']; ?>"
+      src="/reshare/<?= htmlspecialchars($item['foto']); ?>"
       class="w-full h-full object-cover"
-      alt="<?= $item['nama_barang']; ?>"
-    >
+      alt="<?= htmlspecialchars($item['nama_barang']); ?>">
   </div>
 
   <!-- INFO -->
   <div class="flex-1 flex flex-col justify-between">
 
-    <!-- ATAS -->
-    <div class="space-y-2">
-      <h3 class="text-lg font-semibold text-[#3e5648] leading-snug">
-        <?= $item['nama_barang']; ?>
+    <div class="space-y-1">
+      <h3 class="text-lg font-semibold text-[#3e5648]">
+        <?= htmlspecialchars($item['nama_barang']); ?>
       </h3>
 
-      <p class="text-sm text-gray-600 leading-snug">
-        <?= $item['deskripsi']; ?>
+      <p class="text-sm text-gray-600">
+        <?= htmlspecialchars($item['deskripsi']); ?>
       </p>
     </div>
 
-    <!-- BAWAH -->
     <div class="flex items-center justify-between mt-3">
 
-      <!-- BADGE + DONATUR -->
-      <div class="space-y-1">
-        <span class="inline-flex items-center justify-center min-w-[110px] h-[26px]
-                     text-xs text-white rounded-full <?= $badgeClass; ?>">
-          <?= $item['kondisi']; ?>
-        </span>
+      <span class="px-4 py-1 rounded-full text-xs text-white <?= $badgeClass; ?>">
+        <?= htmlspecialchars($item['kondisi']); ?>
+      </span>
 
-        <div class="flex items-center gap-2 mt-1">
-          <img src="<?= $basePath; ?>/assets/icons/user_h.svg" class="w-4 h-4 opacity-70">
-          <p class="text-sm font-medium text-[#3e5648]">
-            <?= $item['donatur']; ?>
-          </p>
-        </div>
-      </div>
-
-      <!-- BUTTON -->
-      <a href="detail_barang.php?id=<?= $item['item_id']; ?>"
+      <a href="detail_barang.php?id=<?= $item['id']; ?>"
          class="flex items-center gap-2 px-5 py-1 rounded-full
-                bg-[#7fb7a4] text-white text-sm
-                hover:opacity-90 transition">
+                bg-[#7fb7a4] text-white text-sm hover:opacity-90 transition">
         Lihat Detail
-        <span class="text-lg">›</span>
       </a>
 
     </div>
   </div>
 </div>
 
+<?php endif; ?>
+<?php if ($mode === 'inbox'): ?>
+
+<div class="flex items-center gap-4
+            bg-white rounded-xl border border-[#3e5648]/20
+            p-4 max-w-[520px]
+            hover:shadow-md transition">
+
+  <div class="w-20 h-20 rounded-lg overflow-hidden bg-gray-100">
+    <img src="/reshare/<?= htmlspecialchars($item['foto']); ?>"
+         class="w-full h-full object-cover">
+  </div>
+
+  <div class="flex-1 text-sm space-y-1">
+
+    <p class="font-semibold text-base">
+      <?= htmlspecialchars($item['nama_barang']); ?>
+    </p>
+
+    <div class="flex gap-2 text-xs text-gray-600">
+      <span><?= htmlspecialchars($item['kategori']); ?></span>
+      <span>•</span>
+      <span><?= htmlspecialchars($item['kondisi']); ?></span>
+    </div>
+
+    <?php if (!empty($item['taken_at'])): ?>
+      <p class="text-xs text-gray-500">
+        Diambil pada <?= date('d M Y', strtotime($item['taken_at'])); ?>
+      </p>
+    <?php else: ?>
+      <p class="text-xs text-gray-500">
+        Diunggah <?= date('d M Y', strtotime($item['created_at'])); ?>
+      </p>
+    <?php endif; ?>
+
+  </div>
+</div>
 <?php endif; ?>

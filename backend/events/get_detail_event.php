@@ -1,57 +1,23 @@
 <?php
-require_once '../config/connection.php';
-require_once '../utils/helper.php';
+require_once __DIR__ . '/../config/connection.php';
 
-$eventId = $_GET['id'] ?? '';
+$id = $_GET['id'] ?? 0;
 
-if (empty($eventId)) {
-    header('Content-Type: application/json');
-    echo json_encode([
-        'success' => false,
-        'message' => 'Event ID required'
-    ]);
-    exit;
+$stmt = $conn->prepare("
+SELECT 
+  e.*,
+  u.username,
+  u.phone
+FROM events e
+JOIN users u ON e.user_id = u.id
+WHERE e.id = ?
+");
+
+$stmt->bind_param("i", $id);
+$stmt->execute();
+
+$event = $stmt->get_result()->fetch_assoc();
+
+if (!$event) {
+  exit('Event tidak ditemukan');
 }
-
-try {
-    $stmt = $pdo->prepare("
-        SELECT
-            event_id,
-            title,
-            deskripsi,
-            kategori,
-            tanggal,
-            lokasi,
-            poster,
-            contact,
-            created_at
-        FROM event
-        WHERE event_id = ?
-    ");
-
-    $stmt->execute([$eventId]);
-    $event = $stmt->fetch();
-
-    if (!$event) {
-        header('Content-Type: application/json');
-        echo json_encode([
-            'success' => false,
-            'message' => 'Event not found'
-        ]);
-        exit;
-    }
-
-    header('Content-Type: application/json');
-    echo json_encode([
-        'success' => true,
-        'data' => $event
-    ]);
-
-} catch (PDOException $e) {
-    header('Content-Type: application/json');
-    echo json_encode([
-        'success' => false,
-        'message' => 'Failed to fetch event details'
-    ]);
-}
-?>

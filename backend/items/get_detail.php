@@ -1,63 +1,36 @@
 <?php
-require_once '../config/connection.php';
-require_once '../utils/helper.php';
+require_once __DIR__ . '/../config/connection.php';
 
-$itemId = $_GET['id'] ?? '';
+$id = intval($_GET['id'] ?? 0);
 
-if (empty($itemId)) {
-    header('Content-Type: application/json');
-    echo json_encode([
-        'success' => false,
-        'message' => 'Item ID required'
-    ]);
-    exit;
+$sql = "
+SELECT 
+  i.id,
+  i.nama_barang,
+  i.kategori,
+  i.kondisi,
+  i.deskripsi,
+  i.alamat,
+  i.foto,
+  i.status,
+  u.username,
+  u.phone
+FROM items i
+JOIN users u ON i.user_id = u.id
+WHERE i.id = ? AND i.status = 'available'
+";
+
+$stmt = $conn->prepare($sql);
+
+if (!$stmt) {
+  die('SQL ERROR: ' . $conn->error);
 }
 
-try {
-    $stmt = $pdo->prepare("
-        SELECT
-            i.item_id,
-            i.nama_barang,
-            i.deskripsi,
-            i.deskripsi_singkat,
-            i.kategori,
-            i.kondisi,
-            i.foto,
-            i.status,
-            i.alamat,
-            i.created_at,
-            u.id as donatur_id,
-            u.nama as donatur,
-            u.email as donatur_email,
-            u.nomor as donatur_nomor
-        FROM item i
-        JOIN users u ON i.user_id = u.id
-        WHERE i.item_id = ?
-    ");
+$stmt->bind_param("i", $id);
+$stmt->execute();
 
-    $stmt->execute([$itemId]);
-    $item = $stmt->fetch();
+$item = $stmt->get_result()->fetch_assoc();
 
-    if (!$item) {
-        header('Content-Type: application/json');
-        echo json_encode([
-            'success' => false,
-            'message' => 'Item not found'
-        ]);
-        exit;
-    }
-
-    header('Content-Type: application/json');
-    echo json_encode([
-        'success' => true,
-        'data' => $item
-    ]);
-
-} catch (PDOException $e) {
-    header('Content-Type: application/json');
-    echo json_encode([
-        'success' => false,
-        'message' => 'Failed to fetch item details'
-    ]);
+if (!$item) {
+  exit('Barang tidak ditemukan atau sudah diambil');
 }
-?>

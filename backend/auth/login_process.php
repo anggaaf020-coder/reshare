@@ -1,46 +1,58 @@
 <?php
-require_once '../config/connection.php';
-require_once '../utils/helper.php';
-require_once '../utils/protection.php';
+session_start();
+require_once __DIR__ . '/../config/connection.php';
 
-validatePostRequest();
-
-if (!rateLimitCheck('login', 5, 300)) {
-    $_SESSION['error'] = 'Too many login attempts. Please try again in 5 minutes.';
-    redirect('../../frontend/login.php');
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header("Location: ../../frontend/login.php");
+    exit;
 }
 
-$username = sanitize($_POST['username'] ?? '');
-$password = $_POST['password'] ?? '';
+// ================= AMBIL INPUT =================
+$identifier = trim($_POST['identifier'] ?? ''); // username atau email
+$password   = $_POST['password'] ?? '';
 
-if (empty($username) || empty($password)) {
-    $_SESSION['error'] = 'Username and password are required';
-    redirect('../../frontend/login.php');
+// ================= VALIDASI =================
+if (empty($identifier) || empty($password)) {
+    $_SESSION['error'] = 'Nama/Email dan password wajib diisi';
+    header("Location: ../../frontend/login.php");
+    exit;
 }
 
-try {
-    $stmt = $pdo->prepare("SELECT id, nama, email, password, nomor FROM users WHERE nama = ? OR email = ?");
-    $stmt->execute([$username, $username]);
+// ================= CEK USER (USERNAME / EMAIL) =================
+$stmt = $conn->prepare(
+    "SELECT id, username, phone, email, password
+     FROM users
+     WHERE email = ? OR username = ?
+     LIMIT 1"
+);
 
-    $user = $stmt->fetch();
+$stmt->bind_param("ss", $identifier, $identifier);
+$stmt->execute();
+$result = $stmt->get_result();
 
-    if (!$user || !verifyPassword($password, $user['password'])) {
-        $_SESSION['error'] = 'Invalid username or password';
-        redirect('../../frontend/login.php');
-    }
-
-    session_regenerate_id(true);
-
-    $_SESSION['user_id'] = $user['id'];
-    $_SESSION['user_nama'] = $user['nama'];
-    $_SESSION['user_email'] = $user['email'];
-    $_SESSION['user_nomor'] = $user['nomor'];
-    $_SESSION['success'] = 'Login successful!';
-
-    redirect('../../frontend/home.php');
-
-} catch (PDOException $e) {
-    $_SESSION['error'] = 'Login failed. Please try again.';
-    redirect('../../frontend/login.php');
+if ($result->num_rows === 0) {
+    $_SESSION['error'] = 'Nama/Email atau password salah';
+    header("Location: ../../frontend/login.php");
+    exit;
 }
-?>
+
+$user = $result->fetch_assoc();
+
+// ================= VERIFIKASI PASSWORD =================
+if (!password_verify($password, $user['password'])) {
+    $_SESSION['error'] = 'Nama/Email atau password salah';
+    header("Location: ../../frontend/login.php");
+    exit;
+}
+
+// ================= LOGIN BERHASIL =================
+$_SESSION['login']    = true;
+$_SESSION['user_id']  = $user['id'];
+$_SESSION['username'] = $user['username'];
+$_SESSION['email']    = $user['email'];
+$_SESSION['phone']    = $user['phone'];
+
+$stmt->close();
+
+header("Location: ../../frontend/welcome.php");
+exit;

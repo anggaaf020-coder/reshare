@@ -1,64 +1,60 @@
 <?php
 require_once '../config/connection.php';
-require_once '../utils/helper.php';
-require_once '../utils/protection.php';
 
-validatePostRequest();
-
-if (!rateLimitCheck('register', 3, 600)) {
-    $_SESSION['error'] = 'Too many registration attempts. Please try again later.';
-    redirect('../../frontend/register.php');
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Location: ../../frontend/register.php');
+    exit;
 }
 
-$nama = sanitize($_POST['username'] ?? '');
-$email = sanitize($_POST['email'] ?? '');
+// ================= AMBIL INPUT =================
+$username = trim($_POST['username'] ?? '');
+$email    = trim($_POST['email'] ?? '');
+$phone    = trim($_POST['phone'] ?? '');
 $password = $_POST['password'] ?? '';
-$nomor = sanitize($_POST['nomor'] ?? '');
 
-if (empty($nama) || empty($email) || empty($password) || empty($nomor)) {
-    $_SESSION['error'] = 'All fields are required';
-    redirect('../../frontend/register.php');
+// ================= VALIDASI =================
+if ($username === '' || $email === '' || $phone === '' || $password === '') {
+    die('❌ Semua field wajib diisi');
 }
 
-if (!validateEmail($email)) {
-    $_SESSION['error'] = 'Invalid email format';
-    redirect('../../frontend/register.php');
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    die('❌ Format email tidak valid');
 }
 
 if (strlen($password) < 6) {
-    $_SESSION['error'] = 'Password must be at least 6 characters';
-    redirect('../../frontend/register.php');
+    die('❌ Password minimal 6 karakter');
 }
 
-try {
-    $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
-    $stmt->execute([$email]);
+// ================= CEK DUPLIKASI =================
+$cek = $conn->prepare(
+    "SELECT id FROM users WHERE username = ? OR email = ?"
+);
+$cek->bind_param("ss", $username, $email);
+$cek->execute();
+$cek->store_result();
 
-    if ($stmt->fetch()) {
-        $_SESSION['error'] = 'Email already registered';
-        redirect('../../frontend/register.php');
-    }
-
-    $hashedPassword = hashPassword($password);
-
-    $stmt = $pdo->prepare("
-        INSERT INTO users (nama, email, password, nomor, created_at)
-        VALUES (?, ?, ?, ?, NOW())
-        RETURNING id
-    ");
-
-    $stmt->execute([$nama, $email, $hashedPassword, $nomor]);
-    $user = $stmt->fetch();
-
-    $_SESSION['user_id'] = $user['id'];
-    $_SESSION['user_nama'] = $nama;
-    $_SESSION['user_email'] = $email;
-    $_SESSION['success'] = 'Registration successful!';
-
-    redirect('../../frontend/home.php');
-
-} catch (PDOException $e) {
-    $_SESSION['error'] = 'Registration failed. Please try again.';
-    redirect('../../frontend/register.php');
+if ($cek->num_rows > 0) {
+    die('❌ Username atau email sudah digunakan');
 }
+$cek->close();
+
+// ================= SIMPAN USER =================
+$password_hash = password_hash($password, PASSWORD_BCRYPT);
+
+$stmt = $conn->prepare(
+    "INSERT INTO users (username, email, password, phone)
+     VALUES (?, ?, ?, ?)"
+);
+
+$stmt->bind_param("ssss", $username, $email, $password_hash, $phone);
+
+if ($stmt->execute()) {
+    header("Location: ../../frontend/login.php?register=success");
+    exit;
+} else {
+    die('❌ Registrasi gagal');
+}
+
+$stmt->close();
+$conn->close();
 ?>

@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../backend/events/fetch_events.php';
 include 'components/navbar_h.php';
 ?>
 
@@ -11,10 +12,6 @@ include 'components/navbar_h.php';
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    </style>
 </head>
 
 <body class="bg-[#fafaf7]">
@@ -28,27 +25,56 @@ include 'components/navbar_h.php';
     <!-- Konten -->
     <div class="relative z-10 max-w-6xl mx-auto mt-12">
 
-        <h1 class="text-5xl font-serif text-[#4A5D49] leading-tight">
+        <h1 class="text-5xl font-serif text-[#3e5648] leading-tight">
             Spread Kindness, Share Hope
         </h1>
 
-        <p class="text-3xl font-semibold text-[#4A5D49] mt-4">
+        <p class="text-[35px] font-semibold text-[#3e5648] mt-4">
             Give more, care more,<br>share more
         </p>
 
         <!-- Search -->
-        <div class="mt-10 w-[35%] bg-white rounded-full px-6 py-2 shadow flex items-center">
-            <input type="text"
-                   placeholder="cari event terdekat"
-                   class="flex-1 outline-none text-[#4A5D49]">
-            <img src="../assets/icons/cari.svg" class="w-5 h-5 opacity-70">
-        </div>
+        <form action="katalog_events.php" method="GET"
+            class="mt-10 w-[45%] bg-[#fafaf7] rounded-full px-6 py-3 shadow flex items-center">
+            <input
+                type="text"
+                name="q"
+                placeholder="cari event terdekat"
+                class="flex-1 text-[#3e5648] bg-transparent font-medium outline-none"
+                required
+            >
+            <button type="submit">
+                <img src="../assets/icons/cari.svg" class="w-5 h-5 opacity-70">
+            </button>
+        </form>
 
-        <a href="add_event.php"
-        class="bg-[#3e5648] w-[12%] px-5 py-1 rounded-full flex items-center gap-3 shadow-md hover:shadow-lg transition mt-8 mx-[120px]">
-        <img src="../assets/icons/event.svg" class="w-3 invert brightness-0 saturate-100">
-        <span class="text-[15px] text-[#fafaf7] font-medium">Add Event</span>
-        </a>
+        <div class="flex gap-4 mt-8">
+
+            <!-- BUAT EVENT -->
+            <a href="upload_event.php"
+            class="bg-[#fafaf7] px-6 py-2 rounded-full
+                    flex items-center justify-center gap-3
+                    shadow-md hover:shadow-lg transition">
+
+                <img src="../assets/icons/event.svg" class="w-5 h-5">
+                <span class="text-[20px] text-[#3e5648] font-medium">
+                    Buat Event
+                </span>
+            </a>
+
+            <!-- KATALOG EVENT -->
+            <a href="katalog_events.php"
+            class="bg-[#fafaf7] px-6 py-2 rounded-full
+                    flex items-center justify-center gap-3
+                    shadow-md hover:shadow-lg transition">
+
+                <img src="../assets/icons/kategori.svg" class="w-5 h-5">
+                <span class="text-[20px] text-[#3e5648] font-medium">
+                    Katalog Event
+                </span>
+            </a>
+
+        </div>
 
         <!-- Foto bulat -->
         <img src="../assets/events/event1.jpg"
@@ -69,131 +95,59 @@ include 'components/navbar_h.php';
 </section>
 
 <!-- ================= FUTURE EVENT ================= -->
-<section class="max-w-7xl mx-auto px-16 pb-24">
+<section class="max-w-6xl mx-auto pt-36 px-8 pb-20">
 
-    <h2 class="text-3xl font-semibold text-center text-[#4A5D49] mt-16 mb-10">
-        Future Event
-    </h2>
+  <h1 class="text-3xl font-semibold text-[#3e5648] mb-10">
+    Event terdekat
+  </h1>
 
-    <!-- GRID EVENT -->
-    <div class="grid grid-cols-3 gap-14">
+  <?php if (empty($events)): ?>
+    <p class="text-gray-500">
+      Belum ada event yang tersedia saat ini.
+    </p>
+  <?php else: ?>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
 
-        <!-- CARD -->
-        <div class="border-2 border-[#4A5D49]/50 rounded-3xl p-6 bg-white">
-            <div class="h-44 rounded-2xl overflow-hidden">
-                <img src="/assetsevents/event1.jpg"
-                     class="w-full h-full object-cover">
-            </div>
+    <?php foreach ($events as $event): ?>
+        <a href="detail_event.php?id=<?= $event['id']; ?>"
+        class="bg-white rounded-3xl border border-[#4A5D49]/30
+                overflow-hidden shadow hover:shadow-xl
+                transition duration-300 hover:-translate-y-1">
 
-            <h3 class="mt-4 text-lg font-semibold text-[#4A5D49]">
-                Judul Event
+        <!-- POSTER -->
+        <div class="h-72 bg-[#fafaf7] flex items-center justify-center">
+            <img
+            src="/reshare/assets/images/events/<?= htmlspecialchars($event['poster']); ?>"
+            alt="<?= htmlspecialchars($event['title']); ?>"
+            class="max-h-full max-w-full object-contain
+                    transition-transform duration-300
+                    group-hover:scale-105">
+        </div>
+
+        <!-- INFO -->
+        <div class="p-6">
+            <h3 class="text-xl font-semibold text-[#4A5D49] leading-snug">
+            <?= htmlspecialchars($event['title']); ?>
             </h3>
 
-            <p class="text-sm text-[#4A5D49] mt-2 flex items-center gap-2">
-                📅 23 Desember 2025
+            <?php if (!empty($event['event_date'])): ?>
+            <p class="mt-3 text-[18px] text-[#4A5D49]">
+                📅 <?= date('d F Y', strtotime($event['event_date'])); ?>
             </p>
+            <?php endif; ?>
 
-            <p class="text-sm text-gray-600 mt-1">
-                Nama Penyelenggara
+            <p class="mt-1 text-[18px] text-gray-600">
+            Penyelenggara: <?= htmlspecialchars($event['username']); ?>
             </p>
-
-            <a href="detail_event.php"
-               class="inline-flex items-center gap-2 mt-4
-                      bg-[#8bbfa9] text-white
-                      px-5 py-2 rounded-full text-sm
-                      hover:opacity-90 transition">
-                Lihat detail →
-            </a>
         </div>
 
-        <!-- Duplikasi card (dummy) -->
-        <div class="border-2 border-[#4A5D49]/50 rounded-3xl p-6 bg-white">
-            <div class="h-44 rounded-2xl overflow-hidden">
-                <img src="/assets/events/event2.jpg"
-                     class="w-full h-full object-cover">
-            </div>
-            <h3 class="mt-4 text-lg font-semibold text-[#4A5D49]">Judul Event</h3>
-            <p class="text-sm mt-2">📅 23 Desember 2025</p>
-            <p class="text-sm text-gray-600 mt-1">Nama Penyelenggara</p>
-            <a href="#" class="mt-4 inline-block bg-[#8bbfa9] text-white px-5 py-2 rounded-full text-sm">
-                Lihat detail →
-            </a>
-        </div>
-
-        <div class="border-2 border-[#4A5D49]/50 rounded-3xl p-6 bg-white">
-            <div class="h-44 rounded-2xl overflow-hidden">
-                <img src="../assets/images/events/event3.jpg"
-                     class="w-full h-full object-cover">
-            </div>
-            <h3 class="mt-4 text-lg font-semibold text-[#4A5D49]">Judul Event</h3>
-            <p class="text-sm mt-2">📅 23 Desember 2025</p>
-            <p class="text-sm text-gray-600 mt-1">Nama Penyelenggara</p>
-            <a href="#" class="mt-4 inline-block bg-[#8bbfa9] text-white px-5 py-2 rounded-full text-sm">
-                Lihat detail →
-            </a>
-        </div>
+        </a>
+    <?php endforeach; ?>
 
     </div>
 
-    <!-- GRID EVENT 2-->
-    <div class="grid grid-cols-3 gap-14 mt-12">
-
-        <!-- CARD -->
-        <div class="border-2 border-[#4A5D49]/50 rounded-3xl p-6 bg-white">
-            <div class="h-44 rounded-2xl overflow-hidden">
-                <img src="../assets/images/events/event1.jpg"
-                     class="w-full h-full object-cover">
-            </div>
-
-            <h3 class="mt-4 text-lg font-semibold text-[#4A5D49]">
-                Judul Event
-            </h3>
-
-            <p class="text-sm text-[#4A5D49] mt-2 flex items-center gap-2">
-                📅 23 Desember 2025
-            </p>
-
-            <p class="text-sm text-gray-600 mt-1">
-                Nama Penyelenggara
-            </p>
-
-            <a href="detail_event.php"
-               class="inline-flex items-center gap-2 mt-4
-                      bg-[#8bbfa9] text-white
-                      px-5 py-2 rounded-full text-sm
-                      hover:opacity-90 transition">
-                Lihat detail →
-            </a>
-        </div>
-
-        <!-- Duplikasi card (dummy) -->
-        <div class="border-2 border-[#4A5D49]/50 rounded-3xl p-6 bg-white">
-            <div class="h-44 rounded-2xl overflow-hidden">
-                <img src="../assets/images/events/event2.jpg"
-                     class="w-full h-full object-cover">
-            </div>
-            <h3 class="mt-4 text-lg font-semibold text-[#4A5D49]">Judul Event</h3>
-            <p class="text-sm mt-2">📅 23 Desember 2025</p>
-            <p class="text-sm text-gray-600 mt-1">Nama Penyelenggara</p>
-            <a href="#" class="mt-4 inline-block bg-[#8bbfa9] text-white px-5 py-2 rounded-full text-sm">
-                Lihat detail →
-            </a>
-        </div>
-
-        <div class="border-2 border-[#4A5D49]/50 rounded-3xl p-6 bg-white">
-            <div class="h-44 rounded-2xl overflow-hidden">
-                <img src="../assets/images/events/event3.jpg"
-                     class="w-full h-full object-cover">
-            </div>
-            <h3 class="mt-4 text-lg font-semibold text-[#4A5D49]">Judul Event</h3>
-            <p class="text-sm mt-2">📅 23 Desember 2025</p>
-            <p class="text-sm text-gray-600 mt-1">Nama Penyelenggara</p>
-            <a href="#" class="mt-4 inline-block bg-[#8bbfa9] text-white px-5 py-2 rounded-full text-sm">
-                Lihat detail →
-            </a>
-        </div>
-
-    </div>
+  <?php endif; ?>
 
 </section>
 

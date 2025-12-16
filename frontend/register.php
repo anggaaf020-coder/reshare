@@ -91,16 +91,16 @@
                             <img src="../assets/icons/kontak.svg" alt="" class="flex item-center">
                             No Handphone
                             </label>
-                            <input type="text" name="nomor"
+                            <input type="text" name="phone"
                                    class="w-full px-4 py-2 rounded-full text-black focus:outline-none shadow-sm"
                                    placeholder="08xxxxxxxx" required>
                         </div>
                     </div>
 
                     <!-- Masuk -->
-                    <button type="button"
+                    <button type="submit"
                         class="w-full bg-[#7fb7a4] text-white mt-7 py-2 rounded-full font-semibold shadow hover:bg-gray-200 transition">
-                        Sign In
+                        Register
                     </button>
 
                     <!-- Garis OR -->
@@ -110,16 +110,13 @@
                         <div class="flex-1 border-t border-gray-300"></div>
                     </div>
 
-                    
-
-                    <!-- Login dengan Google -->
-                    <div class="flex justify-center mt-6">
-                        <button type="submit"
-                                class="w-100 px-8 py-2 pt-2 bg-[#7fb7a4] text-[#fafaf7] rounded-full text-xl font-bold shadow hover:bg-gray-200 transition">
-                            <img src="../assets/icons/google.svg" alt="Google Logo" class="inline w-6 h-6 mr-2 align-middle">
-                            Google
-                        </button>
-                    </div>
+                    <a href="../backend/auth/google_login.php"
+                        class="w-[30%] mx-auto flex items-center justify-center gap-3
+                        bg-[#7fb7a4] text-white py-2 rounded-full
+                        font-semibold shadow hover:opacity-90 transition">
+                        <img src="../assets/icons/google.svg" class="w-6 h-6">
+                        Google
+                    </a>
 
                 </form>
 

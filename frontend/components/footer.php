@@ -28,25 +28,25 @@
 
             <!-- SOCIAL ICONS -->
             <div class="flex items-center gap-4">
-                <a href="https://instagram.com/reshare"
+                <a href="https://www.instagram.com/reshare.official?igsh=MzJwdjV6M2MxaGYz"
                    target="_blank"
                    class="hover:opacity-80 transition">
                     <img src="../assets/icons/ig.svg" class="w-10 h-10">
                 </a>
 
-                <a href="https://tiktok.com/@reshare"
+                <a href="https://www.tiktok.com/@reshareofficial"
                    target="_blank"
                    class="hover:opacity-80 transition">
                     <img src="../assets/icons/tt.svg" class="w-10 h-10">
                 </a>
 
-                <a href="https://youtube.com/@reshare"
+                <a href="https://youtube.com/@reshareofficial?si=pt149J9oa0x5crq8"
                    target="_blank"
                    class="hover:opacity-80 transition">
                     <img src="../assets/icons/yt.svg" class="w-10 h-10">
                 </a>
 
-                <a href="https://x.com/reshare"
+                <a href="https://x.com/ReShareofficial"
                    target="_blank"
                    class="hover:opacity-80 transition">
                     <img src="../assets/icons/twit.svg" class="w-10 h-10">
@@ -54,10 +54,11 @@
             </div>
 
             <!-- SUPPORT EMAIL -->
-            <a href="mailto:reshare@gmail.com"
-               class="text-lg opacity-90 hover:underline">
-                Support : reshare@gmail.com
-            </a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=reshareofficial501@gmail.com"
+                    target="_blank"
+                    class="text-lg opacity-90 hover:underline">
+                    Support : reshareofficial501@gmail.com
+                </a>
         </div>
 
     </div>

@@ -1,3 +1,7 @@
+<?php
+require_once __DIR__ . '/../backend/events/get_detail_event.php';
+?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -31,14 +35,13 @@
           text-[#fafaf7] font-medium hover:opacity-80 transition">
 
     <img src="/reshare/assets/icons/back.svg" class="w-10 h-10" alt="Back">
-    <span class="text-[30px] font-semibold text-[3e5648]">Kembali</span>
+    <span class="text-[30px] font-semibold text-[#3e5648]">Kembali</span>
     </a>
 
         <!-- ================= LEFT : IMAGE SLIDER ================= -->
         <div class="bg-white rounded-3xl p-10 shadow-xl flex flex-col justify-between min-h-[480px]">
-                <!-- Gambar dummy -->
-                <img src="../assets/images/event/event1.jpg"
-                     class="w-full h-full rounded-3xl object-cover flex-shrink-0 shadow">
+                 <img src="/reshare/assets/images/events/<?= htmlspecialchars($event['poster']); ?>"
+                        class="w-full h-full rounded-3xl object-cover shadow">
         </div>
 
         <!-- ================= RIGHT : DETAIL ================= -->
@@ -46,21 +49,21 @@
 
             <div> 
                 <h1 class="text-2xl font-semibold text-[#3e5648]">
-                    Open Donasi Pengabdian Masyarakat
+                 <?= htmlspecialchars($event['title']); ?>
                 </h1>
 
-                <p class="text-sm text-[#3e5648] mt-1">
-                    IKMP Salatiga &nbsp;|&nbsp; Kota Salatiga
-                <div class="border-b-2 border-[#7fb7a4]/50 mt-1"></div>
-                </p>
+            <p class="text-sm text-[#3e5648] mt-1">
+                <?= htmlspecialchars($event['username']); ?>
+                    &nbsp;|&nbsp;
+                <?= htmlspecialchars($event['alamat']); ?>
+            </p>
 
                 <h2 class="font-semibold text-[#3e5648] mt-3 mb-1">Deskripsi</h2>
 
-                <p class="text-[#4A5D49] leading-relaxed">
-                    Ikatan Mahasiswa Pati menyelenggarakan kegiatan pengabdian
-                    masyarakat dengan membuka donasi bagi siapa pun yang ingin
-                    berpartisipasi. Donasi yang diterima berupa:
-                </p>
+            <p class="text-[#4A5D49] leading-relaxed">
+                <?= nl2br(htmlspecialchars($event['description'])); ?>
+            </p>
+
 
                 <ol class="list-decimal list-inside mt-4 text-[#3e5648] space-y-1">
                     <li>Buku</li>
@@ -70,11 +73,9 @@
             </div>
 
             <!-- ================= BUTTON ================= -->
-            <div class="mt-10 flex justify-end">
-                <a href="https://wa.me/6281234567890"
-                   target="_blank"
-                   class="inline-flex items-center gap-2 bg-[#7fb7a4] text-white px-4 py-1 rounded-full font-semibold shadow-sm hover:opacity-90 transition">
-
+            <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $event['phone']); ?>"
+                target="_blank"
+                 class="inline-flex items-center gap-2 bg-[#7fb7a4] text-white px-4 py-1 rounded-full font-semibold shadow-sm hover:opacity-90 transition">
                     <img src="../assets/icons/kontak.svg" class="w-4 h-4" alt="">
                     Hubungi
                 </a>

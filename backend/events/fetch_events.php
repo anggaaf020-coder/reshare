@@ -1,58 +1,22 @@
 <?php
-require_once '../config/connection.php';
-require_once '../utils/helper.php';
+require_once __DIR__ . '/../config/connection.php';
 
-$kategori = $_GET['kategori'] ?? '';
-$search = $_GET['search'] ?? '';
+$sql = "
+    SELECT 
+        e.id,
+        e.title,
+        e.poster,
+        e.alamat,
+        e.event_date,
+        u.username,
+        u.phone
+    FROM events e
+    JOIN users u ON e.user_id = u.id
+    WHERE e.event_date >= CURDATE()
+    ORDER BY e.event_date ASC
+    LIMIT 6
+";
 
-try {
-    $sql = "
-        SELECT
-            event_id,
-            title,
-            deskripsi,
-            kategori,
-            tanggal,
-            lokasi,
-            poster,
-            contact,
-            created_at
-        FROM event
-        WHERE tanggal >= CURRENT_DATE
-    ";
-
-    $params = [];
-
-    if (!empty($kategori)) {
-        $sql .= " AND kategori = ?";
-        $params[] = $kategori;
-    }
-
-    if (!empty($search)) {
-        $sql .= " AND (title ILIKE ? OR deskripsi ILIKE ?)";
-        $searchParam = "%$search%";
-        $params[] = $searchParam;
-        $params[] = $searchParam;
-    }
-
-    $sql .= " ORDER BY tanggal ASC";
-
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute($params);
-
-    $events = $stmt->fetchAll();
-
-    header('Content-Type: application/json');
-    echo json_encode([
-        'success' => true,
-        'data' => $events
-    ]);
-
-} catch (PDOException $e) {
-    header('Content-Type: application/json');
-    echo json_encode([
-        'success' => false,
-        'message' => 'Failed to fetch events'
-    ]);
-}
+$result = $conn->query($sql);
+$events = $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
 ?>

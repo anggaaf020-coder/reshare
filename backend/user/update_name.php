@@ -1,44 +1,69 @@
 <?php
-require_once '../config/connection.php';
-require_once '../utils/helper.php';
-require_once '../utils/protection.php';
+session_start();
+require_once __DIR__ . '/../config/connection.php';
 
-requireLogin();
-validatePostRequest();
+// ================= PROTEKSI =================
+if (!isset($_SESSION['login']) || !isset($_SESSION['user_id'])) {
+    header("Location: ../../frontend/login.php");
+    exit;
+}
 
-$userId = getCurrentUserId();
-$newUsername = sanitize($_POST['new_username'] ?? '');
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header("Location: ../../frontend/settings/rename.php");
+    exit;
+}
 
-if (empty($newUsername)) {
-    $_SESSION['error'] = 'Username cannot be empty';
-    redirect('../../frontend/settings/rename.php');
+// ================= AMBIL DATA =================
+$newUsername = trim($_POST['new_username'] ?? '');
+$userId      = $_SESSION['user_id'];
+
+// ================= VALIDASI =================
+if ($newUsername === '') {
+    $_SESSION['error'] = 'Username baru wajib diisi';
+    header("Location: ../../frontend/settings/rename.php");
+    exit;
 }
 
 if (strlen($newUsername) < 3) {
-    $_SESSION['error'] = 'Username must be at least 3 characters';
-    redirect('../../frontend/settings/rename.php');
+    $_SESSION['error'] = 'Username minimal 3 karakter';
+    header("Location: ../../frontend/settings/rename.php");
+    exit;
 }
 
-try {
-    setUserContext($pdo, $userId);
+// ================= CEK DUPLIKASI =================
+$cek = $conn->prepare(
+    "SELECT id FROM users WHERE username = ? AND id != ?"
+);
+$cek->bind_param("si", $newUsername, $userId);
+$cek->execute();
+$cek->store_result();
 
-    $stmt = $pdo->prepare("SELECT id FROM users WHERE nama = ? AND id != ?");
-    $stmt->execute([$newUsername, $userId]);
-
-    if ($stmt->fetch()) {
-        $_SESSION['error'] = 'Username already taken';
-        redirect('../../frontend/settings/rename.php');
-    }
-
-    $stmt = $pdo->prepare("UPDATE users SET nama = ? WHERE id = ?");
-    $stmt->execute([$newUsername, $userId]);
-
-    $_SESSION['user_nama'] = $newUsername;
-    $_SESSION['success'] = 'Username updated successfully!';
-    redirect('../../frontend/home.php');
-
-} catch (PDOException $e) {
-    $_SESSION['error'] = 'Failed to update username';
-    redirect('../../frontend/settings/rename.php');
+if ($cek->num_rows > 0) {
+    $_SESSION['error'] = 'Username sudah digunakan';
+    $cek->close();
+    header("Location: ../../frontend/settings/rename.php");
+    exit;
 }
-?>
+$cek->close();
+
+// ================= UPDATE =================
+$update = $conn->prepare(
+    "UPDATE users SET username = ? WHERE id = ?"
+);
+$update->bind_param("si", $newUsername, $userId);
+
+if ($update->execute()) {
+    // 🔥 INI KUNCI AGAR DROPDOWN LANGSUNG BERUBAH
+    $_SESSION['username'] = $newUsername;
+
+    $_SESSION['success'] = 'Username berhasil diperbarui';
+    $update->close();
+
+    header("Location: ../../frontend/home.php?updated=username");
+    exit;
+}
+
+$update->close();
+$_SESSION['error'] = 'Gagal mengubah username';
+header("Location: ../../frontend/settings/rename.php");
+exit;

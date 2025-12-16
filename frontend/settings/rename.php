@@ -1,5 +1,9 @@
 <?php
-/* include '../components/navbar.php'; */
+session_start();
+if (!isset($_SESSION['login'])) {
+    header("Location: ../login.php");
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -11,12 +15,6 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-    </style>
 </head>
 
 <body class="h-screen bg-[#F4F1E3]">
@@ -33,39 +31,44 @@
     
     <!-- LEFT PANEL -->
       <div class="w-1/2 bg-[#3e5648] px-16 py-12 flex flex-col items-center justify-center">
-      <!-- BACK BUTTON -->
-    <a href="javascript:history.back()"
-   class="absolute top-6 left-6 flex items-center gap-1
-          text-[#fafaf7] font-medium hover:opacity-80 transition">
 
-    <img src="/reshare/assets/icons/back.svg" class="w-8 h-8" alt="Back">
-    <span class="text-xl font-semibold text-[#3e5648]">Kembali</span>
+    <!-- BACK BUTTON -->
+    <a href="javascript:history.back()"
+       class="absolute top-6 left-6 flex items-center gap-1
+              text-[#fafaf7] font-medium hover:opacity-80 transition">
+
+        <img src="/reshare/assets/icons/back.svg" class="w-10 h-10" alt="Back">
+        <span class="text-[25px] font-semibold text-[#3e5648]">Kembali</span>
     </a>
+
         <!-- HEADER -->
         <div class="flex flex-col items-center text-center">
         <div class="flex items-center gap-4">
             <img src="/reshare/assets/icons/user.svg"
-                class="w-12 h-12 "
+                class="w-12 h-12"
                 alt="User Icon">
             <h1 class="text-5xl font-semibold text-[#fafaf7]">
             Ganti Username
             </h1>
         </div>
 
-          <!-- Divider -->
           <div class="max-w-lg w-full mt-7 border-b-[3px] border-[#fafaf7]/80"></div>
-
         </div>
 
         <!-- FORM -->
-        <div class="mt-10 space-y-3 w-full max-w-md">
+        <form id="renameForm"
+              action="../../backend/user/update_name.php"
+              method="POST"
+              class="mt-10 space-y-3 w-full max-w-md">
 
           <div>
             <label class="block text-sm font-semibold text-[#fafaf7] mb-2">
               USERNAME LAMA
             </label>
             <input type="text"
-                   class="w-full rounded-full px-5 py-3 text-gray-700 text-sm focus:outline-none shadow-sm" placeholder="Masukkan Username lama" required>
+                   value="<?= htmlspecialchars($_SESSION['username']) ?>"
+                   disabled
+                   class="w-full rounded-full px-5 py-3 text-gray-700 text-sm focus:outline-none shadow-sm">
           </div>
 
           <div>
@@ -73,30 +76,36 @@
               USERNAME BARU
             </label>
             <input type="text"
-                   class="w-full rounded-full px-5 py-3 text-gray-700 text-sm focus:outline-none shadow-sm" placeholder="Masukkan Username baru" required>
+                   id="usernameBaru"
+                   name="new_username"
+                   required
+                   class="w-full rounded-full px-5 py-3 text-gray-700 text-sm focus:outline-none shadow-sm"
+                   placeholder="Masukkan Username baru">
           </div>
 
           <!-- BUTTONS -->
-        <div class="grid grid-cols-2 gap-4 pt-10 max-w-lg w-full">
-        
-        <button
-            class="w-full py-3 rounded-full border-2 border-[#fafaf7] 
-                text-[#fafaf7] font-semibold
-                hover:bg-white/10 transition">
-            CEK KETERSEDIAAN
-        </button>
+          <div class="grid grid-cols-2 gap-4 pt-10 max-w-lg w-full">
 
-        <button
-            class="w-full py-3 rounded-full bg-[#8bbfa9] 
-                text-white font-semibold
-                hover:opacity-90 transition">
-            UBAH
-        </button>
+            <button type="button"
+                onclick="cekUsername()"
+                class="w-full py-3 rounded-full bg-[#fafaf7] border-2 border-[#fafaf7] 
+                       text-[#3e5648] font-bold hover:opacity-80 transition">
+                CEK KETERSEDIAAN
+            </button>
 
-        </div>
+            <button id="submitBtn"
+                type="submit"
+                disabled
+                class="w-full py-3 rounded-full bg-[#8bbfa9] 
+                       text-white font-semibold
+                       opacity-50 cursor-not-allowed
+                       hover:opacity-90 transition">
+                UBAH
+            </button>
 
+          </div>
 
-        </div>
+        </form>
       </div>
 
       <!-- RIGHT PANEL -->
@@ -112,7 +121,35 @@
     </div>
   </div>
 
-  <script src="/js/back.js"></script>
+<script>
+function cekUsername() {
+    const username = document.getElementById('usernameBaru').value.trim();
+    const submitBtn = document.getElementById('submitBtn');
+
+    if (username.length < 3) {
+        alert('Username minimal 3 karakter');
+        return;
+    }
+
+    fetch('../../backend/user/check_username.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: 'username=' + encodeURIComponent(username)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'available') {
+            alert('Username tersedia');
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('opacity-50','cursor-not-allowed');
+        } else {
+            alert(data.message);
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50','cursor-not-allowed');
+        }
+    });
+}
+</script>
 
 </body>
 </html>

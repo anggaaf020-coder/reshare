@@ -1,49 +1,47 @@
 <?php
-/* include 'components/navbar_h.php'; */
+session_start();
+require_once __DIR__ . '/../backend/config/connection.php';
 
-// dummy data (nanti ganti dari database)
-$riwayatDonasi = [
-  [
-    'foto' => 'sample1.jpg',
-    'tanggal' => '23-12-2025',
-    'deskripsi' => 'iPhone 11 BNIB iBox 4/64 GB'
-  ],
-  [
-    'foto' => 'sample2.jpg',
-    'tanggal' => '20-12-2025',
-    'deskripsi' => 'Laptop Lenovo Thinkpad'
-  ],
-  [
-    'foto' => 'sample3.jpg',
-    'tanggal' => '18-12-2025',
-    'deskripsi' => 'Catokan Rambut'
-  ],
-];
+if (!isset($_SESSION['user_id'])) {
+  header("Location: login.php");
+  exit;
+}
 
-$riwayatAmbil = [
-  [
-    'foto' => 'sample4.jpg',
-    'tanggal' => '22-12-2025',
-    'deskripsi' => 'Rice Cooker Mini'
-  ],
-  [
-    'foto' => 'sample5.jpg',
-    'tanggal' => '19-12-2025',
-    'deskripsi' => 'Buku Pemrograman'
-  ],
-];
+$user_id = $_SESSION['user_id'];
+
+/* BARANG YANG DIAMBIL */
+$stmtTaken = $conn->prepare("
+  SELECT i.*
+  FROM items i
+  WHERE i.taken_by = ?
+  ORDER BY i.taken_at DESC
+");
+$stmtTaken->bind_param("i", $user_id);
+$stmtTaken->execute();
+$itemsTaken = $stmtTaken->get_result()->fetch_all(MYSQLI_ASSOC);
+
+/* BARANG YANG DIDONASIKAN */
+$stmtDonasi = $conn->prepare("
+  SELECT i.*
+  FROM items i
+  WHERE i.user_id = ?
+  ORDER BY i.created_at DESC
+");
+$stmtDonasi->bind_param("i", $user_id);
+$stmtDonasi->execute();
+$itemsDonasi = $stmtDonasi->get_result()->fetch_all(MYSQLI_ASSOC);
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Inbox | ReShare</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<title>Inbox | ReShare</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 
-<body class="font-['DM_Sans'] min-h-screen relative overflow-hidden text-[#3e5648]">
+<body class="font-['DM_Sans'] bg-[#fafaf7] min-h-screen text-[#3e5648]">
 
 <!-- BACKGROUND -->
 <div class="fixed inset-0 -z-10 bg-cover bg-center"
@@ -51,85 +49,93 @@ $riwayatAmbil = [
   <div class="absolute inset-0 bg-white/30 backdrop-blur-sm"></div>
 </div>
 
-<!-- TAB BUTTON -->
-<div class="flex gap-6 px-10 pt-20">
- <!-- BACK BUTTON -->
-    <a href="javascript:history.back()"
-    class="absolute top-6 left-6 flex items-center gap-1
-          text-[#fafaf7] font-medium hover:opacity-80 transition">
 
-    <img src="/reshare/assets/icons/back.svg" class="w-8 h-8" alt="Back">
-    <span class="text-xl font-semibold text-[#3e5648]">Kembali</span>
-    </a>
+<!-- BACK -->
+<a href="javascript:history.back()"
+   class="fixed top-6 left-6 flex items-center gap-2 z-50">
+  <img src="/reshare/assets/icons/back.svg" class="w-10 h-10">
+  <span class="text-[30px] font-semibold">Kembali</span>
+</a>
+
+
+<!-- BOX -->
+<div class="justify-center min-h-[50px] flex items-center pt-36 pb-20 px-6">
+<div class="max-w-4xl mx-auto bg-[#fafaf7] rounded-[28px] border border-[#3e5648]/50">
+
+<!-- HEADER FIX -->
+<div class="px-8 py-6 border-b border-[#3e5648]/20 grid grid-cols-2">
+  <h2 class="text-xl font-semibold flex justify-start mt-6 px-10">
+    <span id="titleDonasi">Barang yang Kamu Donasikan</span>
+    <span id="titleAmbil" class="hidden">Barang yang Kamu Ambil</span>
+  </h2>
+
+<!-- TAB -->
+<div class="flex justify-end gap-6 px-10 ">
   <button id="tabDonasi"
-    class="px-8 py-2 rounded-full border border-[#3e5648] font-medium bg-white">
+    class="px-8 py-1 rounded-full bg-[#3e5648] text-[#fafaf7] border border-[#3e5648] hover:bg-[#fafaf7] hover:text-[#3e5648] transition">
     Donasi
   </button>
   <button id="tabAmbil"
-    class="px-8 py-2 rounded-full border border-[#3e5648] font-medium bg-transparent">
+    class="px-8 py-1 rounded-full bg-[#3e5648] text-[#fafaf7] border border-[#3e5648] hover:bg-[#fafaf7] hover:text-[#3e5648] transition">
     Diambil
   </button>
 </div>
-
-<!-- CONTAINER -->
-<div class="px-10 mt-6">
-  <div class="bg-[#fafaf7] rounded-[32px] border border-[#3e5648]/60
-              p-8 h-[60vh] overflow-y-auto">
-
-    <!-- DONASI -->
-    <div id="contentDonasi" class="grid grid-cols-2 gap-8">
-      <?php foreach($riwayatDonasi as $r): ?>
-      <div class="flex gap-5 border border-[#3e5648]/50 rounded-2xl p-4">
-        <img src="/reshare/assets/images/<?= $r['foto'] ?>"
-             class="w-28 h-20 rounded-xl object-cover">
-        <div class="text-sm leading-relaxed">
-          <p class="font-medium">Diunggah pada:</p>
-          <p><?= $r['tanggal'] ?></p>
-          <p class="font-medium mt-2">Deskripsi:</p>
-          <p><?= $r['deskripsi'] ?></p>
-        </div>
-      </div>
-      <?php endforeach; ?>
-    </div>
-
-    <!-- AMBIL -->
-    <div id="contentAmbil" class="grid grid-cols-2 gap-8 hidden">
-      <?php foreach($riwayatAmbil as $r): ?>
-      <div class="flex gap-5 border border-[#3e5648]/50 rounded-2xl p-4">
-        <img src="/reshare/assets/images/<?= $r['foto'] ?>"
-             class="w-28 h-20 rounded-xl object-cover">
-        <div class="text-sm leading-relaxed">
-          <p class="font-medium">Diambil pada:</p>
-          <p><?= $r['tanggal'] ?></p>
-          <p class="font-medium mt-2">Deskripsi:</p>
-          <p><?= $r['deskripsi'] ?></p>
-        </div>
-      </div>
-      <?php endforeach; ?>
-    </div>
-
-  </div>
 </div>
 
-<!-- SCRIPT TAB -->
-<script>
-const tabDonasi = document.getElementById('tabDonasi');
-const tabAmbil = document.getElementById('tabAmbil');
-const contentDonasi = document.getElementById('contentDonasi');
-const contentAmbil = document.getElementById('contentAmbil');
+<!-- SCROLL AREA -->
+<div class="px-8 py-6 max-h-[55vh] overflow-y-auto
+            overscroll-contain scrollbar-thin scrollbar-thumb-[#7fb7a4]/40">
 
-tabDonasi.onclick = () => {
-  tabDonasi.classList.add('bg-white');
-  tabAmbil.classList.remove('bg-white');
-  contentDonasi.classList.remove('hidden');
-  contentAmbil.classList.add('hidden');
+<!-- DONASI -->
+<div id="contentDonasi" class="space-y-4">
+<?php if (empty($itemsDonasi)): ?>
+  <p class="text-gray-500">Belum ada barang donasi.</p>
+<?php else: ?>
+  <?php foreach ($itemsDonasi as $item): ?>
+    <?php $mode='inbox'; include 'components/card_item.php'; ?>
+  <?php endforeach; ?>
+<?php endif; ?>
+</div>
+
+<!-- AMBIL -->
+<div id="contentAmbil" class="hidden space-y-4">
+<?php if (empty($itemsTaken)): ?>
+  <p class="text-gray-500">Belum ada barang diambil.</p>
+<?php else: ?>
+  <?php foreach ($itemsTaken as $item): ?>
+    <?php $mode='inbox'; include 'components/card_item.php'; ?>
+  <?php endforeach; ?>
+<?php endif; ?>
+</div>
+
+</div>
+</div>
+</div>
+
+<script>
+const tabDonasi=document.getElementById('tabDonasi');
+const tabAmbil=document.getElementById('tabAmbil');
+const contentDonasi=document.getElementById('contentDonasi');
+const contentAmbil=document.getElementById('contentAmbil');
+const titleDonasi=document.getElementById('titleDonasi');
+const titleAmbil=document.getElementById('titleAmbil');
+
+tabDonasi.onclick=()=>{
+ tabDonasi.classList.add('bg-white');
+ tabAmbil.classList.remove('bg-white');
+ contentDonasi.classList.remove('hidden');
+ contentAmbil.classList.add('hidden');
+ titleDonasi.classList.remove('hidden');
+ titleAmbil.classList.add('hidden');
 };
 
-tabAmbil.onclick = () => {
-  tabAmbil.classList.add('bg-white');
-  tabDonasi.classList.remove('bg-white');
-  contentAmbil.classList.remove('hidden');
-  contentDonasi.classList.add('hidden');
+tabAmbil.onclick=()=>{
+ tabAmbil.classList.add('bg-white');
+ tabDonasi.classList.remove('bg-white');
+ contentAmbil.classList.remove('hidden');
+ contentDonasi.classList.add('hidden');
+ titleAmbil.classList.remove('hidden');
+ titleDonasi.classList.add('hidden');
 };
 </script>
 

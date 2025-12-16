@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['login'])) {
+    header("Location: login.php");
+    exit;
+}
+?>
+
 <header class="fixed top-3 inset-x-10 z-50 bg-transparent"
         id="navbar">
   <div class="max-w-7xl mx-auto px-10 py-4 flex items-center justify-between">

@@ -13,15 +13,29 @@
 
         <!-- CENTER -->
         <div class="flex-1 flex justify-center">
-            <div class="w-[55%] flex items-center bg-white px-6 py-3 rounded-full
-                        shadow-md border border-[#3e5648]/30">
+            <form action="katalog.php" method="GET"
+                class="w-[55%] flex items-center bg-white px-6 py-3 rounded-full
+                       shadow-md border border-[#3e5648]/30">
+
+                <!-- PERTAHANKAN KATEGORI -->
+                <?php if (!empty($_GET['kategori'])): ?>
+                    <input type="hidden" name="kategori"
+                           value="<?= htmlspecialchars($_GET['kategori']); ?>">
+                <?php endif; ?>
+
                 <input
                     type="text"
+                    name="q"
+                    value="<?= htmlspecialchars($_GET['q'] ?? ''); ?>"
                     placeholder="cari barang"
                     class="flex-1 bg-transparent outline-none text-sm"
+                    required
                 >
-                <img src="../assets/icons/cari.svg" class="w-6 h-6">
-            </div>
+
+                <button type="submit">
+                    <img src="../assets/icons/cari.svg" class="w-6 h-6">
+                </button>
+            </form>
         </div>
 
     <!-- KATEGORI -->
@@ -53,10 +67,8 @@
                 <span class="text-lg"><?= $k[0]; ?></span>
             </a>
             <?php endforeach; ?>
-
         </div>
     </div>
-
 </nav>
 
 <script>

@@ -1,19 +1,29 @@
 <?php
-$kategori = ['Elektronik','Pakaian','Rumah Tangga','Buku'];
+  require_once __DIR__ . '/../backend/config/connection.php';
 
-$items = [
-  ['id'=>1,'nama'=>'Kemeja Uniqlo XS','kondisi'=>'Bagus','foto'=>'sample1.jpg'],
-  ['id'=>2,'nama'=>'iPhone 11 64GB','kondisi'=>'Seperti Baru','foto'=>'sample2.jpg'],
-  ['id'=>3,'nama'=>'Cardigan Rajut','kondisi'=>'Layak Pakai','foto'=>'sample3.jpg'],
-  ['id'=>4,'nama'=>'Celana Jeans','kondisi'=>'Bagus','foto'=>'sample4.jpg'],
-  ['id'=>5,'nama'=>'Rice Cooker Mini','kondisi'=>'Layak Pakai','foto'=>'sample5.jpg'],
-];
+  /* ================= REKOMENDASI BARANG RANDOM ================= */
+  $itemQuery = "
+    SELECT id, nama_barang, kondisi, foto
+    FROM items
+    WHERE status = 'available'
+    ORDER BY RAND()
+    LIMIT 8
+  ";
+  $itemResult = $conn->query($itemQuery);
+  $items = $itemResult->fetch_all(MYSQLI_ASSOC);
 
-$events = [
-  ['id'=>1,'judul'=>'Charity Clothes Drive','banner'=>'event1.jpg'],
-  ['id'=>2,'judul'=>'Relawan Berbagi','banner'=>'event2.jpg'],
-  ['id'=>3,'judul'=>'Donate For Earth','banner'=>'event3.jpg'],
-];
+  /* ================= KATEGORI ================= */
+  $kategori = ['Elektronik','Pakaian','Rumah Tangga','Buku'];
+
+  /* ================= EVENT RANDOM ================= */
+  $eventQuery = "
+    SELECT id, title, poster
+    FROM events
+    ORDER BY RAND()
+    LIMIT 6
+  ";
+  $eventResult = $conn->query($eventQuery);
+  $events = $eventResult->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -25,6 +35,7 @@ $events = [
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="main.css">
 </head>
+
 
 <body class="font-['DM_Sans'] bg-white overflow-x-hidden">
 
@@ -52,11 +63,25 @@ $events = [
   <div class="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 pb-24 pt-50">
 
     <img src="../assets/images/logo/reshare.png" class="h-40 w-auto mb-4">
+
     <!-- SEARCH -->
-    <div class="w-full max-w-xl flex items-center bg-white px-6 py-3 border-[#3e5648] rounded-full shadow-lg">
-      <input class="flex-1 outline-none text-sm" placeholder="cari apa hari ini?">
-      <img src="../assets/icons/cari.svg" class="w-6">
-    </div>
+    <form action="katalog.php" method="GET"
+          class="w-full max-w-xl flex items-center bg-white px-6 py-3
+                border-[#3e5648] rounded-full shadow-lg">
+
+      <input
+        type="text"
+        name="q"
+        placeholder="cari apa hari ini?"
+        class="flex-1 outline-none text-sm bg-transparent"
+        required
+      >
+
+      <button type="submit">
+        <img src="../assets/icons/cari.svg" class="w-6">
+      </button>
+
+    </form>
 
     <!-- BUTTONS -->
     <div class="mt-8 flex gap-20 relative">
@@ -115,7 +140,7 @@ $events = [
 
 <<!-- ================= REKOMENDASI BARANG ================= -->
 <section class="py-16">
-  <h2 class="text-2xl font-semibold mb-6 px-10 text-[#3e5648]">
+  <h2 class="text-[35px] font-bold mb-6 px-10 text-[#3e5648]">
     Rekomendasi
   </h2>
 
@@ -150,24 +175,32 @@ $events = [
             default => 'bg-[#7fb7a4]'
           };
         ?>
+          <a href="detail_barang.php?id=<?= $i['id'] ?>"
+            class="relative w-64 h-40 shrink-0 rounded-xl overflow-hidden group
+                    transition-transform duration-300 ease-out
+                    hover:scale-[1.06] hover:shadow-xl">
 
-        <a href="detail_barang.php?id=<?= $i['id'] ?>"
-           class="relative w-64 h-40 shrink-0 rounded-xl overflow-hidden group">
+            <img src="../<?= $i['foto'] ?>"
+                class="w-full h-full object-cover group-hover:scale-105 transition">
 
-          <img src="../assets/images/<?= $i['foto'] ?>"
-               class="w-full h-full object-cover group-hover:scale-105 transition">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
 
-          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+            <?php
+              $badge = match($i['kondisi']) {
+                'Seperti Baru' => 'bg-[#3e5648]',
+                'Bagus' => 'bg-[#657b6e]',
+                default => 'bg-[#7fb7a4]'
+              };
+            ?>
 
-          <span class="absolute bottom-3 left-3 px-3 py-1 rounded-full text-xs text-white <?= $badge ?>">
-            <?= $i['kondisi'] ?>
-          </span>
+            <span class="absolute bottom-3 left-3 px-3 py-1 rounded-full text-[13px] text-[#fafaf7] <?= $badge ?>">
+              <?= $i['kondisi'] ?>
+            </span>
 
-          <p class="absolute bottom-10 left-3 right-3 text-white font-semibold text-sm">
-            <?= $i['nama'] ?>
-          </p>
-        </a>
-
+            <p class="absolute bottom-10 left-3 right-3 text-white font-semibold text-[18px]">
+              <?= $i['nama_barang'] ?>
+            </p>
+          </a>
         <?php endforeach; ?>
       </div>
     </div>
@@ -176,14 +209,19 @@ $events = [
 
 <!-- ================= PILIH FAVORITMU ================= -->
 <section class="px-10 py-12">
-  <h2 class="text-2xl font-semibold mb-4">Pilih Favoritmu</h2>
+  <h2 class="text-[35px] font-semibold mb-4">Pilih Favoritmu</h2>
 
     <div class="grid grid-cols-4 gap-6">
         <?php foreach($kategori as $k): ?>
-        <a href="katalog.php?kategori=<?= $k ?>" class="relative">
+        <a href="katalog.php?kategori=<?= $k ?>" class="relative group transition-transform duration-300
+          hover:scale-[1.04] hover:shadow-2xl">
         <img src="../assets/images/category/<?= strtolower(str_replace(' ','',$k)) ?>.jpg"
-            class="rounded-xl h-60 w-full object-cover">
-        <span class="absolute inset-0 flex items-end p-4 text-white text-xl font-semibold">
+            class="h-60 w-full object-cover rounded-xl border border-[#E5E7EB] shadow-md
+                 transition-all duration-300 group-hover:shadow-xl group-hover:scale-105">
+        <span class="absolute inset-0 flex items-end p-4 text-[#fafaf7] text-[32px] font-bold
+             bg-gradient-to-t from-black/60 via-transparent to-transparent
+             rounded-xl transition-opacity duration-300
+             group-hover:opacity-90">
             <?= $k ?>
         </span>
         </a>
@@ -193,40 +231,41 @@ $events = [
 
 <!-- ================= EVENT ================= -->
 <section class="py-16">
-  <h2 class="text-2xl font-semibold mb-6 px-10 text-[#3e5648]">
+  <h2 class="text-[35px] font-semibold mb-6 px-10 text-[#3e5648]">
     Spesial Untuk Kamu
   </h2>
 
     <div class="relative bg-[#3e5648] rounded-3xl mx-10 p-8 overflow-hidden">
 
-        <button id="prevEvent"
+        <button onclick="prevSlide('eventSlider')"
         class="absolute left-4 top-1/2 -translate-y-1/2 bg-white w-12 h-12 rounded-full flex items-center justify-center shadow-md z-10">
         <img src="../assets/icons/back.svg" class="w-7 h-7">
         </button>
 
-        <button id="nextEvent"
+        <button id="nextBtn-eventSlider" onclick="nextSlide('eventSlider')"
         class="absolute right-4 top-1/2 -translate-y-1/2 bg-white w-12 h-12 rounded-full flex items-center justify-center shadow-md z-10">
         <img src="../assets/icons/back.svg" class="w-7 h-7 rotate-180">
         </button>
 
-        <div class="overflow-hidden">
+        <div id="sliderWrapper" class="overflow-hidden">
         <div id="eventSlider" class="flex gap-6 transition-transform duration-500 ease-out">
 
             <?php foreach($events as $e): ?>
             <a href="detail_event.php?id=<?= $e['id'] ?>"
-            class="w-72 h-80 shrink-0 overflow-hidden relative group">
+              class="w-72 h-80 shrink-0 overflow-hidden relative group
+                      transition-transform duration-300 ease-out
+                      hover:scale-[1.05] hover:shadow-2xl">
 
-            <img src="../assets/images/event/<?= $e['banner'] ?>"
-                class="w-full h-full object-cover group-hover:scale-105 transition">
+              <img src="../assets/images/events/<?= $e['poster'] ?>"
+                  class="w-full h-full object-cover group-hover:scale-105 transition">
 
-            <div class="absolute inset-0 bg-black/40"></div>
+              <div class="absolute inset-0 bg-black/40 transition-opacity duration-300 group-hover:bg-black/30"></div>
 
-            <p class="absolute bottom-4 left-4 right-4 text-white font-semibold text-lg">
-                <?= $e['judul'] ?>
-            </p>
+              <p class="absolute bottom-4 left-4 right-4 text-white font-semibold text-lg">
+                <?= $e['title'] ?>
+              </p>
             </a>
             <?php endforeach; ?>
-
         </div>
         </div>
     </div>
@@ -264,42 +303,44 @@ $events = [
          }, 5000);
         </script>
 
-    <script>
-        function initSlider(sliderId, prevId, nextId, visibleCards) {
-        const slider = document.getElementById(sliderId);
-        const prev = document.getElementById(prevId);
-        const next = document.getElementById(nextId);
+<script>
+  const sliderState = {};
 
-        const total = slider.children.length;
-        const cardWidth = slider.children[0].offsetWidth + 24;
-        let index = 0;
+  function nextSlide(sliderId) {
+    const slider = document.getElementById(sliderId);
+    const wrapper = slider.parentElement;
+    const nextBtn = document.getElementById(`nextBtn-${sliderId}`);
 
-        function update() {
-            slider.style.transform = `translateX(-${index * cardWidth}px)`;
-            prev.classList.toggle("opacity-40", index === 0);
-            next.classList.toggle("opacity-40", index >= total - visibleCards);
-        }
+    if (!sliderState[sliderId]) sliderState[sliderId] = 0;
 
-        next.onclick = () => {
-            if (index < total - visibleCards) {
-            index++;
-            update();
-            }
-        };
+    const sliderWidth = slider.scrollWidth;
+    const wrapperWidth = wrapper.offsetWidth;
+    const maxTranslate = sliderWidth - wrapperWidth;
 
-        prev.onclick = () => {
-            if (index > 0) {
-            index--;
-            update();
-            }
-        };
+    sliderState[sliderId] += 300; // jarak geser
 
-        update();
-        }
+    if (sliderState[sliderId] >= maxTranslate) {
+      sliderState[sliderId] = maxTranslate;
 
-        initSlider("recSlider", "prevRec", "nextRec", 4);
-        initSlider("eventSlider", "prevEvent", "nextEvent", 3);
-    </script>
+      // STOP geser + disable tombol
+      nextBtn.classList.add("opacity-40", "pointer-events-none");
+    }
+
+    slider.style.transform = `translateX(-${sliderState[sliderId]}px)`;
+  }
+
+  function prevSlide(sliderId) {
+    const slider = document.getElementById(sliderId);
+    const nextBtn = document.getElementById(`nextBtn-${sliderId}`);
+
+    sliderState[sliderId] -= 300;
+    if (sliderState[sliderId] < 0) sliderState[sliderId] = 0;
+
+    nextBtn.classList.remove("opacity-40", "pointer-events-none");
+
+    slider.style.transform = `translateX(-${sliderState[sliderId]}px)`;
+  }
+</script>
 
  <script src="../js/dropdown.js"></script>
 </body>
