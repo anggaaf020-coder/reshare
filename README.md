@@ -22,3 +22,11 @@ ReShare mengusung konsep eco-friendly platform dengan tampilan minimalis dan fok
 - membuka localhost yang merujuk ke page index localhost/reshare/index.php
 
 ## Cuplikan website
+
+![Screenshot 21](Screenshot (21).png)
+![Screenshot 22](Screenshot (22).png)
+![Screenshot 23](Screenshot (23).png)
+![Screenshot 24](Screenshot (24).png)
+![Screenshot 25](Screenshot (25).png)
+![Screenshot 26](Screenshot 26.jpeg)
+
