@@ -28,7 +28,7 @@
 
     <!-- LOGO -->
     <img id="heroLogo"
-         src="/reshare/assets/images/logo/reshare.png"
+         src="/reshare/assets/images/logo/ReShare.png"
          class="h-40 w-auto mb-4 drop-shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
          alt="ReShare Logo">
 
