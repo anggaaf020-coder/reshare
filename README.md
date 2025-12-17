@@ -18,3 +18,7 @@ ReShare mengusung konsep eco-friendly platform dengan tampilan minimalis dan fok
 ---
 
 ## Cara Menjalankan Website (Setup)
+- Menjalankan apache dan mysql di xampp
+- membuka localhost yang merujuk ke page index localhost/reshare/index.php
+
+## Cuplikan website
