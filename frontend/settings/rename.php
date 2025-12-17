@@ -18,6 +18,39 @@ if (!isset($_SESSION['login'])) {
 </head>
 
 <body class="h-screen bg-[#F4F1E3]">
+
+  <div id="ajaxToast"
+     class="fixed top-6 right-6 z-50 hidden
+            flex items-center gap-3
+            px-5 py-4 rounded-xl shadow-lg
+            text-white transition-all duration-300">
+  <span id="ajaxToastMsg" class="font-semibold"></span>
+  </div>
+
+
+  <?php if (isset($_SESSION['error']) || isset($_SESSION['success'])): ?>
+    <div id="toast"
+        class="fixed top-6 right-6 z-50
+                flex items-center gap-3
+                px-5 py-4 rounded-xl shadow-lg
+                <?= isset($_SESSION['error']) ? 'bg-red-500' : 'bg-green-500' ?>
+                text-white
+                translate-x-full opacity-0
+                transition-all duration-500">
+
+      <span class="font-semibold">
+        <?= htmlspecialchars($_SESSION['error'] ?? $_SESSION['success']) ?>
+      </span>
+
+      <button onclick="closeToast()"
+              class="ml-2 text-xl leading-none">&times;</button>
+    </div>
+
+    <?php
+    unset($_SESSION['error'], $_SESSION['success']);
+    endif;
+  ?>
+
   <div class="relative h-full overflow-hidden">
 
     <!-- BACKGROUND -->
@@ -122,32 +155,48 @@ if (!isset($_SESSION['login'])) {
   </div>
 
 <script>
+function showAjaxToast(message, type = 'error') {
+  const toast = document.getElementById('ajaxToast');
+  const msg   = document.getElementById('ajaxToastMsg');
+
+  toast.classList.remove('hidden', 'bg-red-500', 'bg-green-500');
+  toast.classList.add(type === 'success' ? 'bg-green-500' : 'bg-red-500');
+  msg.textContent = message;
+
+  setTimeout(() => toast.classList.add('hidden'), 3500);
+}
+
 function cekUsername() {
-    const username = document.getElementById('usernameBaru').value.trim();
-    const submitBtn = document.getElementById('submitBtn');
+  const username = document.getElementById('usernameBaru').value.trim();
+  const submitBtn = document.getElementById('submitBtn');
 
-    if (username.length < 3) {
-        alert('Username minimal 3 karakter');
-        return;
+  if (username.length < 3) {
+    showAjaxToast('Username minimal 3 karakter');
+    submitBtn.disabled = true;
+    submitBtn.classList.add('opacity-50','cursor-not-allowed');
+    return;
+  }
+
+  fetch('../../backend/user/check_username.php', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: 'username=' + encodeURIComponent(username)
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.status === 'available') {
+      showAjaxToast('Username tersedia', 'success');
+      submitBtn.disabled = false;
+      submitBtn.classList.remove('opacity-50','cursor-not-allowed');
+    } else {
+      showAjaxToast(data.message);
+      submitBtn.disabled = true;
+      submitBtn.classList.add('opacity-50','cursor-not-allowed');
     }
-
-    fetch('../../backend/user/check_username.php', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: 'username=' + encodeURIComponent(username)
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.status === 'available') {
-            alert('Username tersedia');
-            submitBtn.disabled = false;
-            submitBtn.classList.remove('opacity-50','cursor-not-allowed');
-        } else {
-            alert(data.message);
-            submitBtn.disabled = true;
-            submitBtn.classList.add('opacity-50','cursor-not-allowed');
-        }
-    });
+  })
+  .catch(() => {
+    showAjaxToast('Terjadi kesalahan server');
+  });
 }
 </script>
 
