@@ -23,10 +23,11 @@ ReShare mengusung konsep eco-friendly platform dengan tampilan minimalis dan fok
 
 ## Cuplikan website
 
-![Screenshot 21](Screenshot (21).png)
-![Screenshot 22](Screenshot (22).png)
-![Screenshot 23](Screenshot (23).png)
-![Screenshot 24](Screenshot (24).png)
-![Screenshot 25](Screenshot (25).png)
-![Screenshot 26](Screenshot 26.jpeg)
+![Screenshot 21](Screenshot%20%2821%29.png)
+![Screenshot 22](Screenshot%20%2822%29.png)
+![Screenshot 23](Screenshot%20%2823%29.png)
+![Screenshot 24](Screenshot%20%2824%29.png)
+![Screenshot 25](Screenshot%20%2825%29.png)
+![Screenshot 26](Screenshot%2026.jpeg)
+
 
