@@ -19,7 +19,7 @@ ReShare mengusung konsep eco-friendly platform dengan tampilan minimalis dan fok
 
 ## Cara Menjalankan Website (Setup)
 - Menjalankan apache dan mysql di xampp
-- membuka localhost yang merujuk ke page index localhost/reshare/index.php
+- membuka localhost yang merujuk ke page index localhost/reshare/frontend/index.php
 
 ## Cuplikan website
 
@@ -29,5 +29,6 @@ ReShare mengusung konsep eco-friendly platform dengan tampilan minimalis dan fok
 ![Screenshot 24](Screenshot%20%2824%29.png)
 ![Screenshot 25](Screenshot%20%2825%29.png)
 ![Screenshot 26](Screenshot%2026.jpeg)
+<img width="1899" height="1079" alt="image" src="https://github.com/user-attachments/assets/a1f0d49b-eee5-47f5-8fa8-4ea63138e1d0" />
 
 
