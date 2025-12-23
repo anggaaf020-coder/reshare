@@ -3,15 +3,28 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-if (!isset($_SESSION['login'])) {
-    return;
-}
+if (!isset($_SESSION['login'])) return;
+
+// KONEKSI & BADGE
+require_once __DIR__ . '/../../backend/config/connection.php';
+require_once __DIR__ . '/../../backend/leaderboard/user_badge.php';
+
+$badgeMap = require __DIR__ . '/../../backend/config/badge_map.php';
+
+$userBadgeKey = getUserBadge($conn, $_SESSION['user_id']);
+$badgeData    = $userBadgeKey ? ($badgeMap[$userBadgeKey] ?? null) : null;
+
 ?>
 
-<div id="settingMenu" class=" dropdown-menu absolute right-0 mt-4 w-[380px] bg-[#FAFAF7] rounded-3xl shadow-xl 
-        opacity-0 scale-95 -translate-y-2 pointer-events-none transition-all duration-200 ease-out origin-top-right overflow-hidden">
 
-  <!-- PROFILE -->
+<div id="settingMenu"
+     class="dropdown-menu absolute right-0 mt-4 w-[380px]
+            bg-[#FAFAF7] rounded-3xl shadow-xl
+            opacity-0 scale-95 -translate-y-2
+            pointer-events-none transition-all duration-200
+            ease-out origin-top-right overflow-hidden">
+
+  <!-- ================= PROFILE ================= -->
   <div class="relative h-44 bg-cover bg-center"
        style="background-image:url('../assets/images/background/bg3.jpg')">
 
@@ -20,40 +33,58 @@ if (!isset($_SESSION['login'])) {
     <div class="relative z-10 p-6 text-white">
       <p class="text-lg">Halo!,</p>
 
-      <a href="inbox.php" class="text-[30px] font-semibold hover:underline">
-        <?= htmlspecialchars($_SESSION['username']) ?>
-      </a>
+      <div class="flex items-center justify-between gap-3">
+        <a href="inbox.php"
+           class="text-[30px] font-semibold hover:underline leading-tight">
+          <?= htmlspecialchars($_SESSION['username']) ?>
+        </a>
 
-      <p class="text-right text-sm mt-6"><?= htmlspecialchars($_SESSION['email']) ?></p>
-      <p class="text-right text-sm"> <?= htmlspecialchars($_SESSION['phone']) ?> </p>
+        <?php if ($badgeData): ?>
+          <div class="relativetransform -translate-y-12 shrink-0 inline-flex items-center gap-2 px-3 py-1.5 bg-white/90 border border-[#3e5648] rounded-full text-[#3e5648]
+                      text-sm font-semibold shadow">
+            <img src="<?= $badgeData['icon'] ?>" class="w-6 h-6" alt="">
+            <?= $badgeData['label'] ?>
+          </div>
+        <?php endif; ?>
+      </div>
+
+      <p class="text-right text-sm mt-0">
+        <?= htmlspecialchars($_SESSION['email']) ?>
+      </p>
+      <p class="text-right text-sm">
+        <?= htmlspecialchars($_SESSION['phone']) ?>
+      </p>
     </div>
   </div>
 
-  <!-- SETTINGS -->
+  <!-- ================= SETTINGS ================= -->
   <div class="p-5 space-y-4">
-
     <?php
-        $settings = [
+      $settings = [
         ['Ganti Username','user.svg','/reshare/frontend/settings/rename.php'],
         ['Ganti Password','password.svg','/reshare/frontend/settings/ganti_password.php'],
         ['Ganti Email','email.svg','/reshare/frontend/settings/ganti_email.php'],
         ['Ganti Nomor','kontak.svg','/reshare/frontend/settings/ganti_nomor.php'],
-        ];
-
-    foreach($settings as $s):
+      ];
     ?>
-    <a href="<?= $s[2]; ?>"
-       class="flex items-center gap-4 px-6 py-4 rounded-xl bg-[#7fb7a4] text-white hover:opacity-90">
-      <img src="../assets/icons/<?= $s[1]; ?>" class="w-7 h-7">
-      <span class="text-lg"><?= $s[0]; ?></span>
-    </a>
+
+    <?php foreach ($settings as $s): ?>
+      <a href="<?= $s[2]; ?>"
+         class="flex items-center gap-4 px-6 py-4
+                rounded-xl bg-[#7fb7a4]
+                text-white hover:opacity-90">
+        <img src="../assets/icons/<?= $s[1]; ?>" class="w-7 h-7">
+        <span class="text-lg"><?= $s[0]; ?></span>
+      </a>
     <?php endforeach; ?>
 
     <hr class="border-[#3e5648]/30 my-4">
 
     <!-- LOGOUT -->
     <a href="../backend/auth/logout.php"
-       class="flex items-center justify-center gap-3 py-4 rounded-xl bg-[#3e5648] text-white text-lg">
+       class="flex items-center justify-center gap-3
+              py-4 rounded-xl bg-[#3e5648]
+              text-white text-lg">
       <img src="../assets/icons/logout.svg" class="w-6 h-6">
       Log Out
     </a>

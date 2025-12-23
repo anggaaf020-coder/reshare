@@ -38,14 +38,6 @@
     <?php unset($_SESSION['error']); ?>
   <?php endif; ?>
 
-  <?php if (!empty($_SESSION['success'])): ?>
-    <div class="mb-6 px-6 py-3 rounded-xl bg-green-100 text-green-700 font-medium">
-      <?= $_SESSION['success']; ?>
-    </div>
-    <?php unset($_SESSION['success']); ?>
-  <?php endif; ?>
-
-
   <form action="/reshare/backend/items/add_item.php"
         method="POST"
         enctype="multipart/form-data"
@@ -124,35 +116,37 @@
             <div class="relative">
               <label class="text-xs uppercase tracking-wider text-slate-500">Kategori</label>
 
-              <button id="kategoriBtn" type="button"
-                      class="w-full mt-2 rounded-2xl px-5 py-3 bg-slate-50 flex justify-between items-center">
+          <button type="button" data-toggle="dropdown" data-target="kategoriMenu"
+            class="w-full mt-2 rounded-2xl px-5 py-3 bg-slate-50 flex justify-between items-center transition shadow-sm hover:shadow-md">
+
                 <span id="kategoriValue" class="flex gap-2 items-center">
-                  <img src="/reshare/assets/icons/elektronik.svg" class="w-5" alt="">
+                  <img src="/reshare/assets/icons/elektronik_h.svg" class="w-5" alt="">
                   Elektronik
                 </span>
                 <span><img src="../assets/icons/back.svg" alt="" class="flex justify-start w-7 h7 rotate-[270deg]"></span>
               </button>
 
-              <div id="kategoriMenu"
-                   class="absolute z-20 mt-2 w-full bg-[#FAFAF7]
-                          rounded-2xl shadow-xl p-3 hidden space-y-2">
+            <div id="kategoriMenu"
+              class="dropdown-menu absolute z-20 mt-2 w-full bg-[#FAFAF7] rounded-2xl shadow-xl p-3 space-y-2
+                    opacity-0 scale-95 -translate-y-2 pointer-events-none transition-all duration-200 ease-out origin-top">
 
-                <button type="button" onclick="setKategori('Elektronik','elektronik.svg')"
+
+                <button type="button" onclick="setKategori('Elektronik','elektronik_h.svg')"
                         class="flex gap-3 items-center w-full px-4 py-3 rounded-xl bg-[#3e5648] text-[#fafaf7]">
                   <img src="/reshare/assets/icons/elektronik.svg" class="w-5" alt=""> Elektronik
                 </button>
 
-                <button type="button" onclick="setKategori('Pakaian','pakaian.svg')"
+                <button type="button" onclick="setKategori('Pakaian','pakaian_h.svg')"
                         class="flex gap-3 items-center w-full px-4 py-3 rounded-xl bg-[#3e5648] text-[#fafaf7]">
                   <img src="/reshare/assets/icons/pakaian.svg" class="w-5" alt=""> Pakaian
                 </button>
 
-                <button type="button" onclick="setKategori('Rumah Tangga','rumahtangga.svg')"
+                <button type="button" onclick="setKategori('Rumah Tangga','rumahtangga_h.svg')"
                         class="flex gap-3 items-center w-full px-4 py-3 rounded-xl bg-[#3e5648] text-[#fafaf7]">
                   <img src="/reshare/assets/icons/rumahtangga.svg" class="w-5" alt=""> Rumah Tangga
                 </button>
 
-                <button type="button" onclick="setKategori('Buku','buku.svg')"
+                <button type="button" onclick="setKategori('Buku','buku_h.svg')"
                         class="flex gap-3 items-center w-full px-4 py-3 rounded-xl bg-[#3e5648] text-[#fafaf7]">
                   <img src="/reshare/assets/icons/buku.svg" class="w-5" alt=""> Buku
                 </button>
@@ -164,14 +158,16 @@
             <div class="relative">
               <label class="text-xs uppercase tracking-wider text-slate-500">Kondisi</label>
 
-              <button id="kondisiBtn" type="button"
-                      class="w-full mt-2 rounded-2xl px-5 py-3 bg-slate-50 flex justify-between items-center">
+              <button type="button" data-toggle="dropdown" data-target="kondisiMenu"
+                class="w-full mt-2 rounded-2xl px-5 py-3 bg-slate-50 flex justify-between items-center transition shadow-sm hover:shadow-md">
+
                 <span id="kondisiValue" class="badge-baru">Seperti Baru</span>
                 <span><img src="../assets/icons/back.svg" alt="" class="flex justify-start w-7 h7 rotate-[270deg]"></span>
               </button>
 
-              <div id="kondisiMenu"
-                   class="absolute z-20 mt-2 w-full bg-white rounded-2xl shadow-lg p-3 hidden space-y-2">
+              <div id="kondisiMenu" class="dropdown-menu absolute z-20 mt-2 w-full bg-white rounded-2xl shadow-lg p-3 space-y-2
+                      opacity-0 scale-95 -translate-y-2 pointer-events-none transition-all duration-200 ease-out origin-top">
+
 
                 <button type="button" onclick="setKondisi('Seperti Baru','badge-baru')" class="badge-baru w-full">
                   Seperti Baru
@@ -225,124 +221,134 @@
   </form>
 </section>
 
-<!-- ================= SCRIPT ================= -->
 <script>
-  /* ================= PREVIEW FOTO ================= */
-  const fotoInput   = document.getElementById('fotoInput');
-  const previewFoto = document.getElementById('previewFoto');
-  const uploadLabel = document.getElementById('uploadLabel');
-  const hapusFotoBtn = document.getElementById('hapusFoto');
 
-  const MAX_SIZE = 2 * 1024 * 1024; // 2MB
+const fotoInput   = document.getElementById('fotoInput');
+const previewFoto = document.getElementById('previewFoto');
+const uploadLabel = document.getElementById('uploadLabel');
+const hapusFotoBtn = document.getElementById('hapusFoto');
 
-  function previewImage(e) {
-    const file = e.target.files[0];
-    if (!file) return;
+const MAX_SIZE = 2 * 1024 * 1024; // 2MB
 
-    if (file.size > MAX_SIZE) {
-      alert('Ukuran foto maksimal 2MB');
-      removeImage();
-      return;
-    }
+function previewImage(e) {
+  const file = e.target.files[0];
+  if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      previewFoto.src = reader.result;
-      previewFoto.classList.remove('hidden');
-      uploadLabel.classList.add('hidden');
-      hapusFotoBtn.classList.remove('hidden');
-    };
-    reader.readAsDataURL(file);
+  if (file.size > MAX_SIZE) {
+    alert('Ukuran foto maksimal 2MB');
+    removeImage();
+    return;
   }
 
-  function removeImage() {
-    fotoInput.value = '';
-    previewFoto.src = '';
-    previewFoto.classList.add('hidden');
-    uploadLabel.classList.remove('hidden');
-    hapusFotoBtn.classList.add('hidden');
-  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    previewFoto.src = reader.result;
+    previewFoto.classList.remove('hidden');
+    uploadLabel.classList.add('hidden');
+    hapusFotoBtn.classList.remove('hidden');
+  };
+  reader.readAsDataURL(file);
+}
 
-  /* ================= DROPDOWN ================= */
-  const kategoriBtn   = document.getElementById('kategoriBtn');
-  const kategoriMenu  = document.getElementById('kategoriMenu');
-  const kategoriValue = document.getElementById('kategoriValue');
+function removeImage() {
+  fotoInput.value = '';
+  previewFoto.src = '';
+  previewFoto.classList.add('hidden');
+  uploadLabel.classList.remove('hidden');
+  hapusFotoBtn.classList.add('hidden');
+}
 
-  const kondisiBtn   = document.getElementById('kondisiBtn');
-  const kondisiMenu  = document.getElementById('kondisiMenu');
-  const kondisiValue = document.getElementById('kondisiValue');
+/* ================= DROPDOWN (FINAL FIXED) ================= */
+document.addEventListener("DOMContentLoaded", () => {
 
-  /* INIT STYLE */
-  [kategoriMenu, kondisiMenu].forEach(menu => {
-    menu.style.transition = 'all 0.18s ease';
-    menu.style.opacity = '0';
-    menu.style.transform = 'translateY(-6px)';
-  });
+  const toggles = document.querySelectorAll("[data-toggle='dropdown']");
 
-  /* TOGGLE DROPDOWN */
-  function toggleDropdown(menu) {
-    if (menu.classList.contains('hidden')) {
-      menu.classList.remove('hidden');
-      requestAnimationFrame(() => {
-        menu.style.opacity = '1';
-        menu.style.transform = 'translateY(0)';
+  toggles.forEach(toggle => {
+    const targetId = toggle.dataset.target;
+    const menu = document.getElementById(targetId);
+    if (!menu) return;
+
+    toggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+
+      const isClosed = menu.classList.contains("opacity-0");
+
+      // Tutup semua dropdown lain
+      document.querySelectorAll(".dropdown-menu").forEach(d => {
+        if (d !== menu) {
+          d.classList.add(
+            "opacity-0",
+            "scale-95",
+            "-translate-y-2",
+            "pointer-events-none"
+          );
+        }
       });
-    } else {
-      menu.style.opacity = '0';
-      menu.style.transform = 'translateY(-6px)';
-      setTimeout(() => menu.classList.add('hidden'), 180);
-    }
-  }
 
-  kategoriBtn.addEventListener('click', e => {
-    e.stopPropagation();
-    toggleDropdown(kategoriMenu);
-  });
-
-  kondisiBtn.addEventListener('click', e => {
-    e.stopPropagation();
-    toggleDropdown(kondisiMenu);
-  });
-
-  /* SET VALUE (update hidden inputs juga) */
-  function setKategori(text, icon) {
-    kategoriValue.innerHTML = `<img src="/reshare/assets/icons/${icon}" class="w-5" alt=""> ${text}`;
-    document.getElementById('kategoriInput').value = text;
-    // hide with animation
-    kategoriMenu.style.opacity = '0';
-    kategoriMenu.style.transform = 'translateY(-6px)';
-    setTimeout(() => kategoriMenu.classList.add('hidden'), 180);
-  }
-
-  function setKondisi(text, badge) {
-    kondisiValue.textContent = text;
-    kondisiValue.className = badge;
-    document.getElementById('kondisiInput').value = text;
-    kondisiMenu.style.opacity = '0';
-    kondisiMenu.style.transform = 'translateY(-6px)';
-    setTimeout(() => kondisiMenu.classList.add('hidden'), 180);
-  }
-
-  /* CLICK OUTSIDE: tutup semua dropdown */
-  document.addEventListener('click', (e) => {
-    [kategoriMenu, kondisiMenu].forEach(menu => {
-      if (!menu.classList.contains('hidden')) {
-        menu.style.opacity = '0';
-        menu.style.transform = 'translateY(-6px)';
-        setTimeout(() => menu.classList.add('hidden'), 180);
+      // Toggle dropdown ini
+      if (isClosed) {
+        menu.classList.remove(
+          "opacity-0",
+          "scale-95",
+          "-translate-y-2",
+          "pointer-events-none"
+        );
+      } else {
+        menu.classList.add(
+          "opacity-0",
+          "scale-95",
+          "-translate-y-2",
+          "pointer-events-none"
+        );
       }
     });
   });
 
-  /* PREVENT form submit when Enter pressed on dropdown buttons (safety) */
-  document.querySelectorAll('#kategoriMenu button, #kondisiMenu button').forEach(b => {
-    b.addEventListener('keydown', e => {
-      if (e.key === 'Enter') e.preventDefault();
+  // Klik di luar → tutup semua dropdown
+  document.addEventListener("click", () => {
+    document.querySelectorAll(".dropdown-menu").forEach(menu => {
+      menu.classList.add(
+        "opacity-0",
+        "scale-95",
+        "-translate-y-2",
+        "pointer-events-none"
+      );
     });
   });
-</script>
+});
 
-<script src="../js/dropdown.js"></script>
+/* ================= SET VALUE ================= */
+function setKategori(text, icon) {
+  const value = document.getElementById('kategoriValue');
+  const menu  = document.getElementById('kategoriMenu');
+
+  value.innerHTML = `<img src="/reshare/assets/icons/${icon}" class="w-5" alt=""> ${text}`;
+  document.getElementById('kategoriInput').value = text;
+
+  menu.classList.add(
+    "opacity-0",
+    "scale-95",
+    "-translate-y-2",
+    "pointer-events-none"
+  );
+}
+
+function setKondisi(text, badge) {
+  const value = document.getElementById('kondisiValue');
+  const menu  = document.getElementById('kondisiMenu');
+
+  value.textContent = text;
+  value.className = badge;
+  document.getElementById('kondisiInput').value = text;
+
+  menu.classList.add(
+    "opacity-0",
+    "scale-95",
+    "-translate-y-2",
+    "pointer-events-none"
+  );
+}
+</script>
 
 <?php include 'components/footer.php'; ?>
 </body>

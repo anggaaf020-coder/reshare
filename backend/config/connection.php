@@ -1,12 +1,11 @@
 <?php
 
-$host = getenv('MYSQLHOST') ?: 'localhost';
-$user = getenv('MYSQLUSER') ?: 'root';
-$pass = getenv('MYSQLPASSWORD') ?: '';
-$db   = getenv('MYSQLDATABASE') ?: 'reshare_db';
-$port = getenv('MYSQLPORT') ?: 3306;
+$DB_HOST = 'localhost';
+$DB_USER = 'root';        
+$DB_PASS = '';            
+$DB_NAME = 'reshare_db';
 
-$conn = new mysqli($host, $user, $pass, $db, $port);
+$conn = new mysqli($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
 
 if ($conn->connect_error) {
     die('Koneksi database gagal: ' . $conn->connect_error);

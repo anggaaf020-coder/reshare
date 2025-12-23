@@ -62,7 +62,7 @@
             foreach ($kategori as $k):
             ?>
             <a href="katalog.php?kategori=<?= $k[0]; ?>"
-               class="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#3e5648] text-white hover:opacity-70 hover:text-[#fafaf7] border border-[#3e5648] transition">
+               class="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#3e5648] text-white hover:opacity-70 hover:translate-x-1 border border-[#3e5648] transition-all duration-200">
                 <img src="../assets/icons/<?= $k[1]; ?>" class="w-6 h-6">
                 <span class="text-lg"><?= $k[0]; ?></span>
             </a>

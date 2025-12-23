@@ -35,7 +35,6 @@ $badgeClass = match($item['kondisi']) {
   <p class="absolute bottom-10 left-3 right-3 text-white font-semibold text-sm leading-tight">
     <?= $item['nama_barang']; ?>
   </p>
-
 </a>
 
 <?php endif; ?>
@@ -57,31 +56,49 @@ $badgeClass = match($item['kondisi']) {
   <!-- INFO -->
   <div class="flex-1 flex flex-col justify-between">
 
-    <div class="space-y-1">
+    <!-- TEKS UTAMA -->
+    <div class="space-y-2">
+
+      <!-- NAMA BARANG -->
       <h3 class="text-lg font-semibold text-[#3e5648]">
         <?= htmlspecialchars($item['nama_barang']); ?>
       </h3>
 
-      <p class="text-sm text-gray-600">
+      <!-- DESKRIPSI -->
+      <p class="text-sm text-gray-600 line-clamp-2">
         <?= htmlspecialchars($item['deskripsi']); ?>
       </p>
-    </div>
 
-    <div class="flex items-center justify-between mt-3">
-
-      <span class="px-4 py-1 rounded-full text-xs text-white <?= $badgeClass; ?>">
+      <!-- KONDISI -->
+      <span class="inline-block w-fit px-4 py-1 rounded-full text-xs text-white <?= $badgeClass; ?>">
         <?= htmlspecialchars($item['kondisi']); ?>
       </span>
 
+    <div class="flex items-center justify-between mt-2">
+
+      <!-- DONATUR -->
+      <div class="flex items-center gap-2 text-xs text-gray-500">
+        <img src="/reshare/assets/icons/user_h.svg"
+            alt="Donatur"
+            class="w-4 h-4 opacity-70">
+        <span class="font-medium">
+          <?= htmlspecialchars($item['donatur']); ?>
+        </span>
+      </div>
+
+      <!-- BUTTON -->
       <a href="detail_barang.php?id=<?= $item['id']; ?>"
-         class="flex items-center gap-2 px-5 py-1 rounded-full
+        class="flex items-center gap-2 px-5 py-1 rounded-full
                 bg-[#7fb7a4] text-white text-sm hover:opacity-90 transition">
         Lihat Detail
       </a>
 
     </div>
+    </div>
+
   </div>
 </div>
+
 
 <?php endif; ?>
 <?php if ($mode === 'inbox'): ?>

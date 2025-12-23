@@ -1,5 +1,7 @@
 <?php
-  require_once __DIR__ . '/../backend/config/connection.php';
+session_start();
+require_once __DIR__ . '/../backend/config/connection.php';
+require_once __DIR__ . '/../backend/leaderboard/top_donatur.php';
 
   /* ================= REKOMENDASI BARANG RANDOM ================= */
   $itemQuery = "
@@ -7,10 +9,14 @@
     FROM items
     WHERE status = 'available'
     ORDER BY RAND()
-    LIMIT 8
+    LIMIT 16
   ";
   $itemResult = $conn->query($itemQuery);
-  $items = $itemResult->fetch_all(MYSQLI_ASSOC);
+  $allItems = $itemResult->fetch_all(MYSQLI_ASSOC);
+
+  /* SPLIT UNTUK 2 ROW */
+  $itemsRow1 = array_slice($allItems, 0, 8);
+  $itemsRow2 = array_slice($allItems, 8, 8);
 
   /* ================= KATEGORI ================= */
   $kategori = ['Elektronik','Pakaian','Rumah Tangga','Buku'];
@@ -62,7 +68,7 @@
   <!-- CONTENT -->
   <div class="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 pb-24 pt-50">
 
-    <img src="../assets/images/logo/reshare.png" class="h-40 w-auto mb-4">
+    <img src="../assets/images/logo/ReShare.png" class="h-40 w-auto mb-4">
 
     <!-- SEARCH -->
     <form action="katalog.php" method="GET"
@@ -89,7 +95,7 @@
       <!-- KATEGORI -->
       <button data-toggle="dropdown" data-target="kategoridropdown"
         class="bg-[#fafaf7] px-10 py-2 h-10 rounded-full flex items-center gap-3 shadow-md hover:shadow-lg transition">
-        <img src="../assets/icons/kategori.svg" class="w-5 h-5">
+        <img src="../assets/icons/kategori_h.svg" class="w-5 h-5">
         <span class="text-[20px] text-[#3e5648] font-medium">Kategori</span>
       </button>
 
@@ -139,77 +145,152 @@
 </section>
 
 <<!-- ================= REKOMENDASI BARANG ================= -->
-<section class="py-16">
-  <h2 class="text-[35px] font-bold mb-6 px-10 text-[#3e5648]">
-    Rekomendasi
-  </h2>
+<section class="max-w-[1440px] mx-auto mt-10">
 
-  <div class="relative bg-[#3e5648] rounded-3xl mx-10 p-8 overflow-hidden">
+    <!-- GRID UTAMA -->
+    <div class="grid grid-cols-12 gap-x-10 items-start">
 
-    <!-- PREV -->
-    <button id="prevRec"
-      class="absolute left-4 top-1/2 -translate-y-1/2 
-             bg-white w-12 h-12 rounded-full 
-             flex items-center justify-center
-             shadow-md transition z-10">
-      <img src="../assets/icons/back.svg" class="w-7 h-7">
-    </button>
+      <!-- ================= LEFT : REKOMENDASI ================= -->
+      <div class="col-span-8">
 
-    <!-- NEXT -->
-    <button id="nextRec"
-      class="absolute right-4 top-1/2 -translate-y-1/2 
-             bg-white w-12 h-12 rounded-full 
-             flex items-center justify-center
-             shadow-md transition z-10">
-      <img src="../assets/icons/back.svg" class="w-7 h-7 rotate-180">
-    </button>
+        <h2 class="text-[35px] font-bold text-[#3e5648] mb-6">
+          Rekomendasi
+        </h2>
 
-    <!-- SLIDER -->
-    <div class="overflow-hidden">
-      <div id="recSlider" class="flex gap-6 transition-transform duration-500 ease-out">
+      <div class="flex flex-col space-y-14">  
+        <!-- ROW 1 -->
+        <div class="relative bg-[#3e5648] rounded-3xl p-8 overflow-hidden">
+          <!-- PREV -->
+          <button onclick="prevSlide('recSlider1')"
+            class="absolute left-4 top-1/2 -translate-y-1/2 
+                  bg-white w-12 h-12 rounded-full 
+                  flex items-center justify-center shadow-md z-10">
+            <img src="../assets/icons/back.svg" class="w-7 h-7">
+          </button>
 
-        <?php foreach($items as $i): 
-          $badge = match($i['kondisi']) {
-            'Seperti Baru' => 'bg-[#3e5648]',
-            'Bagus' => 'bg-[#657b6e]',
-            default => 'bg-[#7fb7a4]'
-          };
-        ?>
-          <a href="detail_barang.php?id=<?= $i['id'] ?>"
-            class="relative w-64 h-40 shrink-0 rounded-xl overflow-hidden group
-                    transition-transform duration-300 ease-out
-                    hover:scale-[1.06] hover:shadow-xl">
+          <!-- NEXT -->
+          <button id="nextBtn-recSlider1"
+            onclick="nextSlide('recSlider1')"
+            class="absolute right-4 top-1/2 -translate-y-1/2 
+                  bg-white w-12 h-12 rounded-full 
+                  flex items-center justify-center shadow-md z-10">
+            <img src="../assets/icons/back.svg" class="w-7 h-7 rotate-180">
+          </button>
 
-            <img src="../<?= $i['foto'] ?>"
-                class="w-full h-full object-cover group-hover:scale-105 transition">
-
-            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
-
-            <?php
+          <div class="overflow-hidden">
+            <div id="recSlider1" class="flex gap-6 transition-transform duration-500 ease-out">
+              <!-- card barang -->
+            <?php foreach($itemsRow1 as $i): 
               $badge = match($i['kondisi']) {
                 'Seperti Baru' => 'bg-[#3e5648]',
                 'Bagus' => 'bg-[#657b6e]',
                 default => 'bg-[#7fb7a4]'
               };
             ?>
+              <a href="detail_barang.php?id=<?= $i['id'] ?>"
+                class="relative w-64 h-40 shrink-0 rounded-xl overflow-hidden group
+                        transition-transform duration-300 ease-out
+                        hover:scale-[1.06] hover:shadow-xl">
 
-            <span class="absolute bottom-3 left-3 px-3 py-1 rounded-full text-[13px] text-[#fafaf7] <?= $badge ?>">
-              <?= $i['kondisi'] ?>
-            </span>
+                <img src="../<?= $i['foto'] ?>"
+                    class="w-full h-full object-cover group-hover:scale-105 transition">
 
-            <p class="absolute bottom-10 left-3 right-3 text-white font-semibold text-[18px]">
-              <?= $i['nama_barang'] ?>
-            </p>
-          </a>
-        <?php endforeach; ?>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+
+                <?php
+                  $badge = match($i['kondisi']) {
+                    'Seperti Baru' => 'bg-[#3e5648]',
+                    'Bagus' => 'bg-[#657b6e]',
+                    default => 'bg-[#7fb7a4]'
+                  };
+                ?>
+
+                <span class="absolute bottom-3 left-3 px-3 py-1 rounded-full text-[13px] text-[#fafaf7] <?= $badge ?>">
+                  <?= $i['kondisi'] ?>
+                </span>
+
+                <p class="absolute bottom-10 left-3 right-3 text-white font-semibold text-[18px]">
+                  <?= $i['nama_barang'] ?>
+                </p>
+              </a>
+            <?php endforeach; ?>
+            </div>
+          </div>
+        </div>
+
+      <!-- ROW 2 -->
+      <div class="relative bg-[#3e5648] mt-10 rounded-3xl p-8 overflow-hidden">
+
+        <!-- PREV -->
+          <button onclick="prevSlide('recSlider2')"
+            class="absolute left-4 top-1/2 -translate-y-1/2 
+                  bg-white w-12 h-12 rounded-full 
+                  flex items-center justify-center shadow-md z-10">
+            <img src="../assets/icons/back.svg" class="w-7 h-7">
+          </button>
+
+        <!-- NEXT -->
+          <button id="nextBtn-recSlider2"
+            onclick="nextSlide('recSlider2')"
+            class="absolute right-4 top-1/2 -translate-y-1/2 
+                  bg-white w-12 h-12 rounded-full 
+                  flex items-center justify-center shadow-md z-10">
+            <img src="../assets/icons/back.svg" class="w-7 h-7 rotate-180">
+          </button>
+
+        <div class="overflow-hidden">
+          <div id="recSlider2" class="flex gap-6 transition-transform duration-500 ease-out">
+            <!-- card barang -->
+             <?php foreach($itemsRow2 as $i): 
+              $badge = match($i['kondisi']) {
+                'Seperti Baru' => 'bg-[#3e5648]',
+                'Bagus' => 'bg-[#657b6e]',
+                default => 'bg-[#7fb7a4]'
+              };
+            ?>
+              <a href="detail_barang.php?id=<?= $i['id'] ?>"
+                class="relative w-64 h-40 shrink-0 rounded-xl overflow-hidden group
+                        transition-transform duration-300 ease-out
+                        hover:scale-[1.06] hover:shadow-xl">
+
+                <img src="../<?= $i['foto'] ?>"
+                    class="w-full h-full object-cover group-hover:scale-105 transition">
+
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+
+                <?php
+                  $badge = match($i['kondisi']) {
+                    'Seperti Baru' => 'bg-[#3e5648]',
+                    'Bagus' => 'bg-[#657b6e]',
+                    default => 'bg-[#7fb7a4]'
+                  };
+                ?>
+
+                <span class="absolute bottom-3 left-3 px-3 py-1 rounded-full text-[13px] text-[#fafaf7] <?= $badge ?>">
+                  <?= $i['kondisi'] ?>
+                </span>
+
+                <p class="absolute bottom-10 left-3 right-3 text-white font-semibold text-[18px]">
+                  <?= $i['nama_barang'] ?>
+                </p>
+              </a>
+            <?php endforeach; ?>
+            </div>
+          </div>
+        </div>
       </div>
+
+    </div>
+
+    <div class="col-span-4 flex justify-end">
+      <?php include 'components/leaderboard.php'; ?>
     </div>
   </div>
 </section>
 
 <!-- ================= PILIH FAVORITMU ================= -->
-<section class="px-10 py-12">
-  <h2 class="text-[35px] font-semibold mb-4">Pilih Favoritmu</h2>
+<section class="px-10 py-12 mt-10">
+  <h2 class="text-[35px] text-[#3e5648] font-semibold mb-4">Pilih Favoritmu</h2>
 
     <div class="grid grid-cols-4 gap-6">
         <?php foreach($kategori as $k): ?>
