@@ -112,7 +112,11 @@ if (isset($_SESSION['user_id'])) {
 
                         <!-- HIDE -->
                     <svg id="eyeOpenLogin"
+<<<<<<< HEAD
                             src="../assets/icons/
+=======
+                            xmlns="http://www.w3.org/2000/svg"
+>>>>>>> 6fbd84a8c10b694aa94a8ccb81385a8fb0d20970
                             width="16" height="16" viewBox="0 0 16 16"
                             class="fill-#3e5648">
                         <g>
@@ -122,6 +126,7 @@ if (isset($_SESSION['user_id'])) {
                     </svg>
 
                         <!-- SEE -->
+<<<<<<< HEAD
                         <svg id="eyeClosedLogin"
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="16" height="16" viewBox="0 0 16 16"
@@ -129,6 +134,16 @@ if (isset($_SESSION['user_id'])) {
                             <path d="M13.359 11.238C12.062 12.197 10.355 13 8 13c-2.355 0-4.062-.803-5.359-1.762C1.223 10.206.278 8.834.09 8.513a.58.58 0 0 1 0-.513c.188-.32 1.133-1.693 2.55-2.725C3.938 4.316 5.645 3.5 8 3.5c.88 0 1.69.11 2.42.307l-.889.889A3.5 3.5 0 0 0 4.5 8a3.5 3.5 0 0 0 5.804 2.657z"/>
                             <path d="M15.854 15.146a.5.5 0 0 1-.708 0l-14-14a.5.5 0 1 1 .708-.708l14 14a.5.5 0 0 1 0 .708"/>
                         </svg>
+=======
+                    <svg id="eyeClosedLogin"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16" height="16" viewBox="0 0 16 16"
+                            class="fill-#3e5648 hidden">
+                        <path d="M13.359 11.238C12.062 12.197 10.355 13 8 13c-2.355 0-4.062-.803-5.359-1.762C1.223 10.206.278 8.834.09 8.513a.58.58 0 0 1 0-.513c.188-.32 1.133-1.693 2.55-2.725C3.938 4.316 5.645 3.5 8 3.5c.88 0 1.69.11 2.42.307l-.889.889A3.5 3.5 0 0 0 4.5 8a3.5 3.5 0 0 0 5.804 2.657z"/>
+                        <path d="M15.854 15.146a.5.5 0 0 1-.708 0l-14-14a.5.5 0 1 1 .708-.708l14 14a.5.5 0 0 1 0 .708"/>
+                    </svg>
+
+>>>>>>> 6fbd84a8c10b694aa94a8ccb81385a8fb0d20970
                     </button>
                     </div>
 
@@ -154,6 +169,7 @@ if (isset($_SESSION['user_id'])) {
     <script src="../js/darkmode.js"></script>
 
 <script>
+<<<<<<< HEAD
     document.addEventListener("DOMContentLoaded", () => {
     const toast = document.getElementById("toast");
     if (toast) {
@@ -187,5 +203,20 @@ function toggleLoginPassword() {
 </script>
 
 
+=======
+    const passwordInput = document.getElementById("loginPassword");
+
+    passwordInput.addEventListener("mousedown", e => {
+    if (e.ctrlKey) {
+        passwordInput.type = "text";
+    }
+    });
+
+    document.addEventListener("mouseup", () => {
+    passwordInput.type = "password";
+    });
+</script>
+
+>>>>>>> 6fbd84a8c10b694aa94a8ccb81385a8fb0d20970
 </body>
 </html>

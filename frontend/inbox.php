@@ -97,13 +97,35 @@
   </a>
 
 
+<<<<<<< HEAD
   <!-- BOX -->
     <div class="justify-center min-h-[50px] flex items-center pt-28 pb-20 px-6">
     <div class="w-[800px] mx-auto bg-[#fafaf7] rounded-[28px] border border-[#3e5648]/50 flex flex-col">
+=======
+<!-- BOX -->
+  <div class="justify-center min-h-[50px] flex items-center pt-36 pb-20 px-6">
+  <div class="w-[800px] mx-auto bg-[#fafaf7] rounded-[28px] border border-[#3e5648]/50 flex flex-col">
+
+>>>>>>> 6fbd84a8c10b694aa94a8ccb81385a8fb0d20970
 
 
+<<<<<<< HEAD
       <div class="px-10 py-6 border-b border-[#3e5648]/20 flex flex-col items-center">
         <div class="max-w-[640px] mx-auto flex flex-col items-center">
+=======
+<!-- TAB -->
+<div class="flex justify-end gap-6 px-10 ">
+  <button id="tabDonasi"
+    class="px-8 py-1 rounded-full bg-[#3e5648] text-[#fafaf7] border border-[#3e5648] hover:bg-[#fafaf7] hover:text-[#3e5648] onclick:text-[#3e5648] transition">
+    Donasi
+  </button>
+  <button id="tabAmbil"
+    class="px-8 py-1 rounded-full bg-[#3e5648] text-[#fafaf7] border border-[#3e5648] hover:bg-[#fafaf7] hover:text-[#3e5648] onclick:text-[#3e5648] transition">
+    Diambil
+  </button>
+</div>
+</div>
+>>>>>>> 6fbd84a8c10b694aa94a8ccb81385a8fb0d20970
 
 
         <!-- JUDUL -->
@@ -275,6 +297,7 @@
   const tabAmbil = document.getElementById('tabAmbil');
   const tabPermintaan = document.getElementById('tabPermintaan');
 
+<<<<<<< HEAD
   const contentDonasi = document.getElementById('contentDonasi');
   const contentAmbil = document.getElementById('contentAmbil');
   const contentPermintaan = document.getElementById('contentPermintaan');
@@ -331,6 +354,25 @@
     tabDonasi.click();
   <?php endif; ?>
 
+=======
+tabDonasi.onclick=()=>{
+ tabDonasi.classList.add('bg-[#fafaf7]');
+ tabAmbil.classList.remove('bg-[#fafaf7]');
+ contentDonasi.classList.remove('hidden');
+ contentAmbil.classList.add('hidden');
+ titleDonasi.classList.remove('hidden');
+ titleAmbil.classList.add('hidden');
+};
+
+tabAmbil.onclick=()=>{
+ tabAmbil.classList.add('bg-[#fafaf7]');
+ tabDonasi.classList.remove('bg-[#fafaf7]');
+ contentAmbil.classList.remove('hidden');
+ contentDonasi.classList.add('hidden');
+ titleAmbil.classList.remove('hidden');
+ titleDonasi.classList.add('hidden');
+};
+>>>>>>> 6fbd84a8c10b694aa94a8ccb81385a8fb0d20970
 </script>
 
   </body>
